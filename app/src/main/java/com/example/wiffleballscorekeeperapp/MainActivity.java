@@ -3,6 +3,7 @@ package com.example.wiffleballscorekeeperapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -48,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.ball_button).setOnClickListener((View view) -> {
             game.callBall();
+            checkGameOver();
             displayGame();
         });
         findViewById(R.id.strike_button).setOnClickListener((View view) -> {
             game.callStrike();
+            checkGameOver();
             displayGame();
         });
 
@@ -63,21 +66,25 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.single_button).setOnClickListener((View view) -> {
             game.advanceRunnersHit(1);
             showMenu(pitch_menu);
+            checkGameOver();
             displayGame();
         });
         findViewById(R.id.double_button).setOnClickListener((View view) -> {
             game.advanceRunnersHit(2);
             showMenu(pitch_menu);
+            checkGameOver();
             displayGame();
         });
         findViewById(R.id.triple_button).setOnClickListener((View view) -> {
             game.advanceRunnersHit(3);
             showMenu(pitch_menu);
+            checkGameOver();
             displayGame();
         });
         findViewById(R.id.homerun_button).setOnClickListener((View view) -> {
             game.advanceRunnersHit(4);
             showMenu(pitch_menu);
+            checkGameOver();
             displayGame();
         });
 
@@ -89,17 +96,28 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.flyout_button).setOnClickListener((View view) -> {
             game.flyOut();
             showMenu(pitch_menu);
+            checkGameOver();
             displayGame();
         });
         findViewById(R.id.groundout_button).setOnClickListener((View view) -> {
             game.groundOut();
             showMenu(pitch_menu);
+            checkGameOver();
             displayGame();
         });
 
         findViewById(R.id.cancel_out_button).setOnClickListener((View view) -> cancelClicked(view));
 
         displayGame();
+    }
+
+    public void checkGameOver()
+    {
+        if (game.isGameOver)
+        {
+            pitch_menu.setVisibility(View.GONE);
+            findViewById(R.id.gameover_buttons).setVisibility(View.VISIBLE);
+        }
     }
 
     public void cancelClicked(View view)
@@ -114,28 +132,22 @@ public class MainActivity extends AppCompatActivity {
         if (out_menu != menu) out_menu.setVisibility(View.GONE); else out_menu.setVisibility(View.VISIBLE);
     }
 
+    @SuppressLint("SetTextI18n")
     public void displayGame() {
         String inning_text = (game.isTopInning() ?  "TOP " : "BOT ") + game.getInning();
-        int home_runs = game.getHomeRuns();
-        int home_hits = game.getHomeHits();
-        int home_walks = game.getHomeWalks();
-        int away_runs = game.getAwayRuns();
-        int away_hits = game.getAwayHits();
-        int away_walks = game.getAwayWalks();
         char runner_on_first = (game.isRunnerOnBase(1) ? 'X' : 'O');
         char runner_on_second = (game.isRunnerOnBase(2) ? 'X' : 'O');
         char runner_on_third = (game.isRunnerOnBase(3) ? 'X' : 'O');
-        String message = game.getMessage();
 
         inning_display.setText(inning_text);
-        home_runs_display.setText(Integer.toString(home_runs));
-        home_hits_display.setText(Integer.toString(home_hits));
-        home_walks_display.setText(Integer.toString(home_walks));
-        away_runs_display.setText(Integer.toString(away_runs));
-        away_hits_display.setText(Integer.toString(away_hits));
-        away_walks_display.setText(Integer.toString(away_walks));
-        count_display.setText(String.format("%d-%d, %d out", game.getBalls(), game.getStrikes(), game.getOuts()));
+        home_runs_display.setText(Integer.toString(game.getHomeRuns()));
+        home_hits_display.setText(Integer.toString(game.getHomeHits()));
+        home_walks_display.setText(Integer.toString(game.getHomeWalks()));
+        away_runs_display.setText(Integer.toString(game.getAwayRuns()));
+        away_hits_display.setText(Integer.toString(game.getAwayHits()));
+        away_walks_display.setText(Integer.toString(game.getAwayWalks()));
+        count_display.setText(getString(R.string.count_text, game.getBalls(), game.getStrikes(), game.getOuts()));
         runners_display.setText(String.format("   %c   \n%c     %c\n   O   ", runner_on_second, runner_on_third, runner_on_first));
-        message_display.setText(message);
+        message_display.setText(game.getMessage());
     }
 }

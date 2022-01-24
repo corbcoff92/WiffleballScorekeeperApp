@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Wiffleball Scorekeeper App</string>
+    <string name="count_text">%d - %d, %d out</string>
 </resources>
