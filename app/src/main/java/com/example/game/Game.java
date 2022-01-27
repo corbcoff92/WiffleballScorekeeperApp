@@ -439,11 +439,23 @@ public class Game
     {
         String action = state.keySet().iterator().next();
         Game game = state.get(action);
-
-        isGameOver = game.isGameOver;    
-        isTopOfInning = game.isTopOfInning;
         message = "Undo: " + action;
-        NUM_INNINGS = game.NUM_INNINGS; 
+        setState(game);
+    }
+
+    public void redo(final HashMap<String, Game> state)
+    {
+        String action = state.keySet().iterator().next();
+        Game game = state.get(action);
+        message = "Redo: " + action;
+        setState(game);
+    }
+
+    private void setState(Game game)
+    {
+        isGameOver = game.isGameOver;
+        isTopOfInning = game.isTopOfInning;
+        NUM_INNINGS = game.NUM_INNINGS;
         inning = game.inning;
         count = game.count;
         battingTeam = game.battingTeam;

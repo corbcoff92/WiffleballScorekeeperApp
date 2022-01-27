@@ -29,10 +29,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/heading_display">
 
@@ -48,7 +49,7 @@
                 <TextView
                     android:id="@+id/inning_display"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="5"
                     android:text="TOP 1"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
@@ -85,7 +86,7 @@
                 <TextView
                     android:id="@+id/away_name"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="5"
                     android:text="AWAY"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -125,7 +126,7 @@
                 <TextView
                     android:id="@+id/home_name_display"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="5"
                     android:text="HOME"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -169,7 +170,7 @@
                     android:gravity="start|center_vertical"
                     android:text="@string/count_text"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="20sp" />
             </TableRow>
 
             <TableRow
@@ -180,24 +181,82 @@
                     android:id="@+id/message_display"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_span="4"
+                    android:layout_weight="1"
                     android:text="Message"
                     android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:layout_weight="1"
-                    android:layout_span="4"/>
+                    android:textSize="14sp" />
 
             </TableRow>
         </TableLayout>
 
-        <TextView
-            android:id="@+id/runners_display"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="   %c   \n%c     %c\n   %c   "
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp">
+
+            <ImageView
+                android:id="@+id/runner_second_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:src="@drawable/base_empty"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/runner_first_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-8dp"
+                android:layout_marginLeft="-8dp"
+                android:layout_marginTop="-8dp"
+                android:src="@drawable/base_empty"
+                app:layout_constraintStart_toEndOf="@+id/runner_second_display"
+                app:layout_constraintTop_toBottomOf="@+id/runner_second_display" />
+
+            <ImageView
+                android:id="@+id/runner_third_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:layout_marginEnd="-8dp"
+                android:layout_marginRight="-8dp"
+                android:src="@drawable/base_empty"
+                app:layout_constraintEnd_toStartOf="@+id/runner_second_display"
+                app:layout_constraintTop_toBottomOf="@+id/runner_second_display" />
+
+            <ImageView
+                android:id="@+id/out_2_display"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/out_empty"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/out_1_display"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:src="@drawable/out_empty"
+                app:layout_constraintEnd_toStartOf="@+id/out_2_display"
+                app:layout_constraintTop_toTopOf="@+id/out_2_display" />
+
+            <ImageView
+                android:id="@+id/out_3_display"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:src="@drawable/out_empty"
+                app:layout_constraintStart_toEndOf="@+id/out_2_display"
+                app:layout_constraintTop_toTopOf="@+id/out_2_display" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </TableRow>
 
@@ -255,12 +314,34 @@
             android:minHeight="60dp"
             android:text="Out" />
 
-        <Button
-            android:id="@+id/undo_button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="60dp"
-            android:text="Undo" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/undo_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:minHeight="60dp"
+                android:backgroundTint="@color/disabled_button_color"
+                android:text="Undo" />
+
+            <Button
+                android:id="@+id/redo_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="1"
+                android:minHeight="60dp"
+                android:backgroundTint="@color/disabled_button_color"
+                android:text="Redo" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/quit_button"
