@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private Button undo_button;
     private Button redo_button;
     private Button continue_button;
-    final private String LOG_TAG = "MAIN_ACTIVITY";
+    private Toast toaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +76,9 @@ public class MainActivity extends AppCompatActivity {
         continue_button = findViewById(R.id.continue_button);
 
         findViewById(R.id.continue_button).setOnClickListener((View view) -> {
-            game.nextBatter();
-            updateGame();
+            game.continueGame();
+            updateMenu();
+            displayGame();
         });
 
         findViewById(R.id.ball_button).setOnClickListener((View view) -> pitchCalled(GameAndroid.PITCH_CALL_TYPES.BALL));
@@ -102,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.gameover_undo_button).setOnClickListener((View view) -> {
             undoGameAction();
-            findViewById(R.id.gameover_buttons).setVisibility(View.GONE);
-            showMenu(pitch_menu);
         });
 
         displayGame();
@@ -164,9 +163,8 @@ public class MainActivity extends AppCompatActivity {
         String action = game.undoGameAction();
         if (action == null) {
             action = "Cannot undo further...";
-        } else {
-            updateMenu();
         }
+        displayGame();
         makeToast("Undo: " + action);
     }
 
@@ -174,9 +172,8 @@ public class MainActivity extends AppCompatActivity {
         String action = game.redoGameAction();
         if (action == null) {
             action = "Cannot redo further...";
-        } else {
-            updateMenu();
         }
+        displayGame();
         makeToast("Redo: " + action);
     }
 
@@ -189,6 +186,15 @@ public class MainActivity extends AppCompatActivity {
             redo_button.setBackgroundColor(getResources().getColor(R.color.button_color));
         else
             redo_button.setBackgroundColor(getResources().getColor(R.color.disabled_button_color));
+        if (!game.isWaiting && !game.isGameOver) {
+            showMenu(pitch_menu);
+        } else if (game.isWaiting) {
+            String continue_state = game.getWaitingState();
+            continue_button.setText(continue_state);
+            showMenu(continue_menu);
+        } else {
+            showMenu(gameover_menu);
+        }
     }
 
     public void cancelClicked(View view) {
@@ -245,7 +251,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void makeToast(String toast_text) {
-        Toast toast = Toast.makeText(this, toast_text, Toast.LENGTH_SHORT);
-        toast.show();
+        if (toaster == null) {
+            toaster = Toast.makeText(this, toast_text, Toast.LENGTH_SHORT);
+        }
+        toaster.setText(toast_text);
+        toaster.show();
     }
 }

@@ -2,7 +2,9 @@ package com.example.game;
 
 public class GameAndroid extends Game {
     public enum PITCH_CALL_TYPES {BALL, STRIKE}
+
     public enum HIT_TYPES {SINGLE, DOUBLE, TRIPLE, HOMERUN}
+
     public enum OUT_TYPES {FLYOUT, GROUNDOUT}
 
     private GameStack gameStack;
@@ -64,17 +66,28 @@ public class GameAndroid extends Game {
 
     }
 
-    public String redoGameAction() {
-        return  gameStack.redoLastAction();
+    public String getWaitingState() {
+        String waitingState = "";
+        if (isWaiting) {
+            if (checkInningOver()) {
+                waitingState = "Switch sides";
+            } else {
+                waitingState = "Next batter";
+            }
+        }
+        return waitingState;
     }
 
-    public boolean undoAvailable()
-    {
+
+    public String redoGameAction() {
+        return gameStack.redoLastAction();
+    }
+
+    public boolean undoAvailable() {
         return gameStack.undoAvailable();
     }
 
-    public boolean redoAvailable()
-    {
+    public boolean redoAvailable() {
         return gameStack.redoAvailable();
     }
 }
