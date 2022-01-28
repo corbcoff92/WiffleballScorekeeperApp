@@ -1,8 +1,7 @@
 package com.example.wiffleballscorekeeperapp;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -12,20 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.game.Game;
-import com.example.game.GameStack;
-
-import java.util.Iterator;
+import com.example.game.GameAndroid;
 
 public class MainActivity extends AppCompatActivity {
-    private Game game = new Game(2, "HOME", "AWAY");
-    private GameStack gameStack = new GameStack(game);
+    final private String LOG_TAG = "MAIN_ACTIVITY";
 
-    private enum PITCH_CALL_TYPES {BALL, STRIKE}
-
-    private enum HIT_TYPES {SINGLE, DOUBLE, TRIPLE, HOMERUN}
-
-    private enum OUT_TYPES {FLYOUT, GROUNDOUT}
+    private GameAndroid game;
 
     private TextView inning_display;
     private TextView home_runs_display;
@@ -47,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
     private View out_menu;
     private Button undo_button;
     private Button redo_button;
-    final private String LOG_TAG = "MAIN_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        game = new GameAndroid(2, "HOME", "AWAY");
 
         inning_display = findViewById(R.id.inning_display);
         home_runs_display = findViewById(R.id.home_runs_display);
@@ -78,19 +69,19 @@ public class MainActivity extends AppCompatActivity {
         redo_button = findViewById(R.id.redo_button);
 
 
-        findViewById(R.id.ball_button).setOnClickListener((View view) -> pitchCalled(PITCH_CALL_TYPES.BALL));
-        findViewById(R.id.strike_button).setOnClickListener((View view) -> pitchCalled(PITCH_CALL_TYPES.STRIKE));
+        findViewById(R.id.ball_button).setOnClickListener((View view) -> pitchCalled(GameAndroid.PITCH_CALL_TYPES.BALL));
+        findViewById(R.id.strike_button).setOnClickListener((View view) -> pitchCalled(GameAndroid.PITCH_CALL_TYPES.STRIKE));
 
         findViewById(R.id.hit_button).setOnClickListener((View view) -> showMenu(hit_menu));
-        findViewById(R.id.single_button).setOnClickListener((View view) -> ballHit(HIT_TYPES.SINGLE));
-        findViewById(R.id.double_button).setOnClickListener((View view) -> ballHit(HIT_TYPES.DOUBLE));
-        findViewById(R.id.triple_button).setOnClickListener((View view) -> ballHit(HIT_TYPES.TRIPLE));
-        findViewById(R.id.homerun_button).setOnClickListener((View view) -> ballHit(HIT_TYPES.HOMERUN));
+        findViewById(R.id.single_button).setOnClickListener((View view) -> ballHit(GameAndroid.HIT_TYPES.SINGLE));
+        findViewById(R.id.double_button).setOnClickListener((View view) -> ballHit(GameAndroid.HIT_TYPES.DOUBLE));
+        findViewById(R.id.triple_button).setOnClickListener((View view) -> ballHit(GameAndroid.HIT_TYPES.TRIPLE));
+        findViewById(R.id.homerun_button).setOnClickListener((View view) -> ballHit(GameAndroid.HIT_TYPES.HOMERUN));
         findViewById(R.id.cancel_hit_button).setOnClickListener((View view) -> cancelClicked(view));
 
         findViewById(R.id.out_button).setOnClickListener((View view) -> showMenu(out_menu));
-        findViewById(R.id.flyout_button).setOnClickListener((View view) -> outMade(OUT_TYPES.FLYOUT));
-        findViewById(R.id.groundout_button).setOnClickListener((View view) -> outMade(OUT_TYPES.GROUNDOUT));
+        findViewById(R.id.flyout_button).setOnClickListener((View view) -> outMade(GameAndroid.OUT_TYPES.FLYOUT));
+        findViewById(R.id.groundout_button).setOnClickListener((View view) -> outMade(GameAndroid.OUT_TYPES.GROUNDOUT));
         findViewById(R.id.cancel_out_button).setOnClickListener((View view) -> cancelClicked(view));
 
         findViewById(R.id.undo_button).setOnClickListener((View view) -> undoGameAction());
@@ -107,94 +98,86 @@ public class MainActivity extends AppCompatActivity {
         displayGame();
     }
 
-    private void pitchCalled(PITCH_CALL_TYPES callType) {
+    public void pitchCalled(GameAndroid.PITCH_CALL_TYPES callType) {
+        game.pitchCalled(callType);
+        String toastText = "";
         switch (callType) {
             case BALL:
-                gameStack.stackGameState("Ball");
-                game.callBall();
+                toastText = "Ball";
                 break;
             case STRIKE:
-                gameStack.stackGameState("Strike");
-                game.callStrike();
+                toastText = "Strike";
                 break;
         }
-        updateGame();
+        displayGame();
+        makeToast(toastText);
     }
 
-    private void ballHit(HIT_TYPES hit_type) {
-        switch (hit_type) {
+    private void ballHit(GameAndroid.HIT_TYPES hitType) {
+        game.ballHit(hitType);
+        String toast_text = "";
+        switch (hitType) {
             case SINGLE:
-                gameStack.stackGameState("Single");
-                game.advanceRunnersHit(1);
+                toast_text = "Single!";
                 break;
             case DOUBLE:
-                gameStack.stackGameState("Double");
-                game.advanceRunnersHit(2);
+                toast_text = "Double!";
                 break;
             case TRIPLE:
-                gameStack.stackGameState("Triple");
-                game.advanceRunnersHit(3);
+                toast_text = "Triple!";
                 break;
             case HOMERUN:
-                gameStack.stackGameState("Homerun");
-                game.advanceRunnersHit(4);
+                toast_text = "Homerun!";
                 break;
         }
-        showMenu(pitch_menu);
-        updateGame();
+        displayGame();
+        makeToast(toast_text);
     }
 
-    private void outMade(OUT_TYPES out_type) {
-        switch (out_type) {
+    private void outMade(GameAndroid.OUT_TYPES outType) {
+        game.outMade(outType);
+        String toastText = "";
+        switch (outType) {
             case GROUNDOUT:
-                gameStack.stackGameState("Groundout");
-                game.groundOut();
+                toastText = "Groundout";
                 break;
             case FLYOUT:
-                gameStack.stackGameState("Flyout");
-                game.flyOut();
+                toastText = "Flyout";
                 break;
         }
-        showMenu(pitch_menu);
-        updateGame();
+        displayGame();
+        makeToast(toastText);
     }
 
     private void undoGameAction() {
-        String action = gameStack.undoLastAction();
-        updateGame();
+        String action = game.undoGameAction();
         if (action == null) {
-            Toast toast = Toast.makeText(this, "Cannot undo further...", Toast.LENGTH_SHORT);
-            toast.show();
+            action = "Cannot undo further...";
+        } else {
+            updateMenu();
         }
+        makeToast("Undo: " + action);
     }
 
     private void redoGameAction() {
-        String action = gameStack.redoLastAction();
-        updateGame();
+        String action = game.redoGameAction();
         if (action == null) {
-            Toast toast = Toast.makeText(this, "Cannot redo further...", Toast.LENGTH_SHORT);
-            toast.show();
+            action = "Cannot redo further...";
+        } else {
+            updateMenu();
         }
+        makeToast("Redo: " + action);
     }
 
-    private void updateGame() {
-        if (gameStack.undoAvailable())
+    private void updateMenu() {
+        if (game.undoAvailable())
             undo_button.setBackgroundColor(getResources().getColor(R.color.button_color));
         else
             undo_button.setBackgroundColor(getResources().getColor(R.color.disabled_button_color));
-        if (gameStack.redoAvailable())
+        if (game.redoAvailable())
             redo_button.setBackgroundColor(getResources().getColor(R.color.button_color));
         else
             redo_button.setBackgroundColor(getResources().getColor(R.color.disabled_button_color));
-        checkGameOver();
-        displayGame();
-    }
-
-    public void checkGameOver() {
-        if (game.isGameOver) {
-            pitch_menu.setVisibility(View.GONE);
-            findViewById(R.id.gameover_buttons).setVisibility(View.VISIBLE);
-        }
     }
 
     public void cancelClicked(View view) {
@@ -212,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void displayGame() {
+        updateMenu();
+
         String inning_text = (game.isTopInning() ? "TOP " : "BOT ") + game.getInning();
         inning_display.setText(inning_text);
         home_runs_display.setText(Integer.toString(game.getHomeRuns()));
@@ -242,5 +227,10 @@ public class MainActivity extends AppCompatActivity {
         out_1_display.setImageResource(outs[0]);
         out_2_display.setImageResource(outs[1]);
         out_3_display.setImageResource(outs[2]);
+    }
+
+    private void makeToast(String toast_text) {
+        Toast toast = Toast.makeText(this, toast_text, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
