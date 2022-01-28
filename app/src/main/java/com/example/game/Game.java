@@ -14,12 +14,13 @@ public class Game
     /**
      * Boolean flag indicating whether or not this game has ended.
      */
-    public boolean isGameOver = false;
-    
+    public static enum WAITING_STATES {NONE, NEW_BATTER, NEW_INNING, OVER}
+    public WAITING_STATES waitingState = WAITING_STATES.NONE;
+
     // Package private members
     private boolean isTopOfInning;
     private String message;
-    private int NUM_INNINGS; 
+    private int NUM_INNINGS;
     private int inning;
     private Count count;
     private Team homeTeam;
@@ -28,6 +29,7 @@ public class Game
     private Team pitchingTeam;
     private int outs;
     private LinkedList <Integer> runners;
+
     
     /**
      * Initializes a newly started game against the provided team names, that will last the given number of innings. 
@@ -62,7 +64,7 @@ public class Game
      */
     public Game(final Game game)
     {
-        isGameOver = game.isGameOver;
+        waitingState = game.waitingState;
         isTopOfInning = game.isTopOfInning;
         message = game.message;
         NUM_INNINGS = game.NUM_INNINGS; 
@@ -101,7 +103,7 @@ public class Game
         // if so, advance the runner(s)
         if (count.checkWalk())
         {
-            message = "Walk";
+            message = "Walked";
             advanceRunnersWalk();
         }
     }
@@ -160,8 +162,8 @@ public class Game
         // more efficient to determine which runners 
         // have scored 
         runners.addFirst(numBases);
+        waitingState = WAITING_STATES.NEW_BATTER;
         checkRunnersScored();
-        count.reset();
     }
     
     /**
@@ -185,8 +187,8 @@ public class Game
         // have scored 
         runners.addFirst(1);
         pitchingTeam.walks++;
+        waitingState = WAITING_STATES.NEW_BATTER;
         checkRunnersScored();
-        count.reset();
     }
     
     /**
@@ -244,15 +246,30 @@ public class Game
     private void outMade()
     {
         outs++;
-        count.reset();
+        if (outs < 3)
+            waitingState = WAITING_STATES.NEW_BATTER;
+        else {
+            message += ", switch sides";
+            waitingState = WAITING_STATES.NEW_INNING;
+        }
         checkGameOver();
-        // Check if half-inning is over
-        if (outs >=3 && !isGameOver)
+    }
+
+    public void nextBatter()
+    {
+        if (waitingState != WAITING_STATES.NONE && waitingState != WAITING_STATES.OVER)
         {
-            nextHalfInning();
+            // Check if half-inning is over
+            if (outs >=3 && waitingState != WAITING_STATES.OVER)
+            {
+                nextHalfInning();
+            }
+            count.reset();
+            message = "Batter up!";
+            waitingState = WAITING_STATES.NONE;
         }
     }
-    
+
     /**
      * Implementation of a new half-inning being started. The inning is advanced, 
      * outs are reset, runners are cleard, and teams are switched.
@@ -266,7 +283,6 @@ public class Game
             isTopOfInning = false;
             battingTeam = homeTeam;
             pitchingTeam = awayTeam;
-            message = "Switch sides";
         }
         // Bottom of inning
         else
@@ -296,18 +312,18 @@ public class Game
                 // no bottom of the inning is required
                 if (outs >= 3 && homeTeam.getRuns() > awayTeam.getRuns())
                 {
-                    isGameOver = true;
+                    waitingState = WAITING_STATES.OVER;
                     message = "Home Team has won!";
                 }
             }
             else
             {
-                // If the bottom of the inning is played, and the home team wins, 
+                // If the bottom of the inning is played, and the home team wins,
                 // then they have won by walkoff!
                 if (homeTeam.getRuns() > awayTeam.getRuns())
                 {
-                    isGameOver = true;
-                    message = "Walkoff " + message.split(",")[0] + ", Home Team has won!"; 
+                    waitingState = WAITING_STATES.OVER;
+                    message = "Walkoff " + message.split(",")[0] + ", Home Team has won!";
                 }
                 else
                 {
@@ -315,7 +331,7 @@ public class Game
                     // then the away team has won
                     if (outs >= 3 && homeTeam.getRuns() < awayTeam.getRuns())
                     {
-                        isGameOver = true;
+                        waitingState = WAITING_STATES.OVER;
                         message = "Away Team has won!"; 
                     }
                 }
@@ -453,7 +469,7 @@ public class Game
 
     private void setState(Game game)
     {
-        isGameOver = game.isGameOver;
+        waitingState = game.waitingState;
         isTopOfInning = game.isTopOfInning;
         NUM_INNINGS = game.NUM_INNINGS;
         inning = game.inning;

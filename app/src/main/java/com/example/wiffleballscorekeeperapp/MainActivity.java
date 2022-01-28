@@ -36,8 +36,12 @@ public class MainActivity extends AppCompatActivity {
     private View pitch_menu;
     private View hit_menu;
     private View out_menu;
+    private View continue_menu;
+    private View gameover_menu;
     private Button undo_button;
     private Button redo_button;
+    private Button continue_button;
+    final private String LOG_TAG = "MAIN_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +68,17 @@ public class MainActivity extends AppCompatActivity {
         pitch_menu = findViewById(R.id.pitch_buttons);
         hit_menu = findViewById(R.id.hit_buttons);
         out_menu = findViewById(R.id.out_buttons);
+        continue_menu = findViewById(R.id.continue_buttons);
+        gameover_menu = findViewById(R.id.gameover_buttons);
 
         undo_button = findViewById(R.id.undo_button);
         redo_button = findViewById(R.id.redo_button);
+        continue_button = findViewById(R.id.continue_button);
 
+        findViewById(R.id.continue_button).setOnClickListener((View view) -> {
+            game.nextBatter();
+            updateGame();
+        });
 
         findViewById(R.id.ball_button).setOnClickListener((View view) -> pitchCalled(GameAndroid.PITCH_CALL_TYPES.BALL));
         findViewById(R.id.strike_button).setOnClickListener((View view) -> pitchCalled(GameAndroid.PITCH_CALL_TYPES.STRIKE));
@@ -191,6 +202,10 @@ public class MainActivity extends AppCompatActivity {
         else hit_menu.setVisibility(View.VISIBLE);
         if (out_menu != menu) out_menu.setVisibility(View.GONE);
         else out_menu.setVisibility(View.VISIBLE);
+        if (continue_menu != menu) continue_menu.setVisibility(View.GONE);
+        else continue_menu.setVisibility(View.VISIBLE);
+        if (gameover_menu != menu) gameover_menu.setVisibility(View.GONE);
+        else gameover_menu.setVisibility(View.VISIBLE);
     }
 
     @SuppressLint("SetTextI18n")
