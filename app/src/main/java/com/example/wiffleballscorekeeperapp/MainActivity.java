@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,7 +19,7 @@ import com.example.game.GameStack;
 import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
-    private Game game = new Game(2, "HOME", "AWAY");
+    private Game game = new Game(1, "HOME", "AWAY");
     private GameStack gameStack = new GameStack(game);
 
     private enum PITCH_CALL_TYPES {BALL, STRIKE}
@@ -45,8 +46,11 @@ public class MainActivity extends AppCompatActivity {
     private View pitch_menu;
     private View hit_menu;
     private View out_menu;
+    private View continue_menu;
+    private View gameover_menu;
     private Button undo_button;
     private Button redo_button;
+    private Button continue_button;
     final private String LOG_TAG = "MAIN_ACTIVITY";
 
     @Override
@@ -73,10 +77,17 @@ public class MainActivity extends AppCompatActivity {
         pitch_menu = findViewById(R.id.pitch_buttons);
         hit_menu = findViewById(R.id.hit_buttons);
         out_menu = findViewById(R.id.out_buttons);
+        continue_menu = findViewById(R.id.continue_buttons);
+        gameover_menu = findViewById(R.id.gameover_buttons);
 
         undo_button = findViewById(R.id.undo_button);
         redo_button = findViewById(R.id.redo_button);
+        continue_button = findViewById(R.id.continue_button);
 
+        findViewById(R.id.continue_button).setOnClickListener((View view) -> {
+            game.nextBatter();
+            updateGame();
+        });
 
         findViewById(R.id.ball_button).setOnClickListener((View view) -> pitchCalled(PITCH_CALL_TYPES.BALL));
         findViewById(R.id.strike_button).setOnClickListener((View view) -> pitchCalled(PITCH_CALL_TYPES.STRIKE));
@@ -140,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                 game.advanceRunnersHit(4);
                 break;
         }
-        showMenu(pitch_menu);
         updateGame();
     }
 
@@ -155,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
                 game.flyOut();
                 break;
         }
-        showMenu(pitch_menu);
         updateGame();
     }
 
@@ -166,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, "Cannot undo further...", Toast.LENGTH_SHORT);
             toast.show();
         }
+        updateGame();
     }
 
     private void redoGameAction() {
@@ -175,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, "Cannot redo further...", Toast.LENGTH_SHORT);
             toast.show();
         }
+        updateGame();
     }
 
     private void updateGame() {
@@ -186,15 +197,24 @@ public class MainActivity extends AppCompatActivity {
             redo_button.setBackgroundColor(getResources().getColor(R.color.button_color));
         else
             redo_button.setBackgroundColor(getResources().getColor(R.color.disabled_button_color));
-        checkGameOver();
-        displayGame();
-    }
 
-    public void checkGameOver() {
-        if (game.isGameOver) {
-            pitch_menu.setVisibility(View.GONE);
-            findViewById(R.id.gameover_buttons).setVisibility(View.VISIBLE);
+        switch (game.waitingState) {
+            case NEW_BATTER:
+                continue_button.setText("Next Batter");
+                showMenu(continue_menu);
+                break;
+            case NEW_INNING:
+                continue_button.setText("Next Inning");
+                showMenu(continue_menu);
+                break;
+            case NONE:
+                showMenu(pitch_menu);
+                break;
+            case OVER:
+                showMenu(gameover_menu);
+                break;
         }
+        displayGame();
     }
 
     public void cancelClicked(View view) {
@@ -208,6 +228,10 @@ public class MainActivity extends AppCompatActivity {
         else hit_menu.setVisibility(View.VISIBLE);
         if (out_menu != menu) out_menu.setVisibility(View.GONE);
         else out_menu.setVisibility(View.VISIBLE);
+        if (continue_menu != menu) continue_menu.setVisibility(View.GONE);
+        else continue_menu.setVisibility(View.VISIBLE);
+        if (gameover_menu != menu) gameover_menu.setVisibility(View.GONE);
+        else gameover_menu.setVisibility(View.VISIBLE);
     }
 
     @SuppressLint("SetTextI18n")

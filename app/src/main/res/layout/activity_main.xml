@@ -326,8 +326,8 @@
                 android:layout_marginEnd="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
-                android:minHeight="60dp"
                 android:backgroundTint="@color/disabled_button_color"
+                android:minHeight="60dp"
                 android:text="Undo" />
 
             <Button
@@ -337,8 +337,8 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
                 android:layout_weight="1"
-                android:minHeight="60dp"
                 android:backgroundTint="@color/disabled_button_color"
+                android:minHeight="60dp"
                 android:text="Redo" />
 
         </LinearLayout>
@@ -464,6 +464,27 @@
             android:layout_height="wrap_content"
             android:minHeight="60dp"
             android:text="Done" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/continue_buttons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_display"
+        tools:visibility="gone">
+
+        <Button
+            android:id="@+id/continue_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Play Ball!" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
