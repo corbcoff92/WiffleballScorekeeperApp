@@ -9,6 +9,8 @@ public class GameAndroid extends Game {
 
     private GameStack gameStack;
 
+    private boolean started = false;
+
     public GameAndroid(int numInnings, String away_name, String home_name) {
         super(numInnings, home_name, away_name);
         gameStack = new GameStack(this);
@@ -78,6 +80,9 @@ public class GameAndroid extends Game {
         return waitingState;
     }
 
+    public void begin() {
+        started = true;
+    }
 
     public String redoGameAction() {
         return gameStack.redoLastAction();
@@ -90,4 +95,6 @@ public class GameAndroid extends Game {
     public boolean redoAvailable() {
         return gameStack.redoAvailable();
     }
+
+    public boolean hasStarted() { return started; }
 }
