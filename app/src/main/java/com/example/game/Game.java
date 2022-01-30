@@ -37,7 +37,7 @@ public class Game {
      * @param homeTeamName The desired name for the home team. Can only be a maximum of 10 characters.
      * @param awayTeamName The desired name for the away team. Can only be a maximum of 10 characters.
      */
-    Game(int numInnings, String homeTeamName, String awayTeamName) {
+    Game(int numInnings, String awayTeamName, String homeTeamName) {
         NUM_INNINGS = numInnings;
         inning = 1;
         isTopOfInning = true;
@@ -232,13 +232,12 @@ public class Game {
         checkGameOver();
     }
 
-    public boolean checkInningOver()
-    {
+    public boolean checkInningOver() {
         return outs >= 3;
     }
 
     public void continueGame() {
-        if (isWaiting  && !isGameOver) {
+        if (isWaiting && !isGameOver) {
             // Check if half-inning is over
             if (checkInningOver()) {
                 nextHalfInning();
@@ -362,6 +361,13 @@ public class Game {
     public String getMessage() {
         return message;
     }
+
+    public int getNumInnings() { return NUM_INNINGS; }
+
+    public String getAwayName() { return awayTeam.name; }
+
+    public String getHomeName() { return homeTeam.name; }
+
 
 
     /**
