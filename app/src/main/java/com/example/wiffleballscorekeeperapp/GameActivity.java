@@ -3,6 +3,7 @@ package com.example.wiffleballscorekeeperapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,9 @@ public class GameActivity extends AppCompatActivity {
 
     private GameAndroid game;
 
+    private TextView heading_display;
+    private TextView away_name_display;
+    private TextView home_name_display;
     private TextView inning_display;
     private TextView home_runs_display;
     private TextView home_hits_display;
@@ -47,7 +51,19 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        game = new GameAndroid(2, "HOME", "AWAY");
+        Intent intent = getIntent();
+        int numberOfInnings = intent.getIntExtra(SetupNewGame.EXTRA_NUMBER_OF_INNINGS, 0);
+        String away_name = intent.getStringExtra(SetupNewGame.EXTRA_AWAY_NAME);
+        String home_name = intent.getStringExtra(SetupNewGame.EXTRA_HOME_NAME);
+
+        game = new GameAndroid(numberOfInnings, home_name, away_name);
+
+        heading_display = findViewById(R.id.heading_display);
+        away_name_display = findViewById(R.id.away_name_display);
+        home_name_display = findViewById(R.id.home_name_display);
+        heading_display.setText(String.format("%d inning-game", game.getNumInnings()));
+        away_name_display.setText(game.getAwayName());
+        home_name_display.setText(game.getHomeName());
 
         inning_display = findViewById(R.id.inning_display);
         home_runs_display = findViewById(R.id.home_runs_display);
@@ -80,6 +96,7 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.continue_button).setOnClickListener((View view) -> {
             game.continueGame();
             showMenu(pitch_menu);
+            displayGame();
         });
 
         findViewById(R.id.ball_button).setOnClickListener((View view) -> pitchCalled(GameAndroid.PITCH_CALL_TYPES.BALL));
@@ -106,6 +123,8 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.gameover_undo_button).setOnClickListener((View view) -> {
             undoGameAction();
         });
+
+
 
         displayGame();
     }

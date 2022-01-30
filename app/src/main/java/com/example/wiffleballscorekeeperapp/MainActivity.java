@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void newGame(View view)
     {
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, SetupNewGame.class);
         startActivity(intent);
     }
 }
