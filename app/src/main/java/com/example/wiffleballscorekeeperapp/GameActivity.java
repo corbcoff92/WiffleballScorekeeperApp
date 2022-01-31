@@ -3,7 +3,6 @@ package com.example.wiffleballscorekeeperapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,16 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.game.Game;
 import com.example.game.GameAndroid;
+
+import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
     final private String LOG_TAG = this.getClass().getSimpleName();
 
-    private GameAndroid game;
+    final private GameAndroid androidGame = GameAndroid.getInstance();
 
-    private TextView heading_display;
-    private TextView away_name_display;
-    private TextView home_name_display;
+
     private TextView inning_display;
     private TextView home_runs_display;
     private TextView home_hits_display;
@@ -41,6 +41,7 @@ public class GameActivity extends AppCompatActivity {
     private View out_menu;
     private View continue_menu;
     private View gameover_menu;
+    private ArrayList<View> menus = new ArrayList<View>();
     private Button undo_button;
     private Button redo_button;
     private Button continue_button;
@@ -51,19 +52,17 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        Intent intent = getIntent();
-        int numberOfInnings = intent.getIntExtra(SetupNewGame.EXTRA_NUMBER_OF_INNINGS, 0);
-        String away_name = intent.getStringExtra(SetupNewGame.EXTRA_AWAY_NAME);
-        String home_name = intent.getStringExtra(SetupNewGame.EXTRA_HOME_NAME);
-
-        game = new GameAndroid(numberOfInnings, home_name, away_name);
+        TextView heading_display;
+        TextView away_name_display;
+        TextView home_name_display;
 
         heading_display = findViewById(R.id.heading_display);
         away_name_display = findViewById(R.id.away_name_display);
         home_name_display = findViewById(R.id.home_name_display);
-        heading_display.setText(String.format("%d inning-game", game.getNumInnings()));
-        away_name_display.setText(game.getAwayName());
-        home_name_display.setText(game.getHomeName());
+
+        heading_display.setText(String.format("%d inning-game", androidGame.getNumInnings()));
+        away_name_display.setText(androidGame.getAwayName());
+        home_name_display.setText(androidGame.getHomeName());
 
         inning_display = findViewById(R.id.inning_display);
         home_runs_display = findViewById(R.id.home_runs_display);
@@ -87,15 +86,20 @@ public class GameActivity extends AppCompatActivity {
         continue_menu = findViewById(R.id.continue_buttons);
         gameover_menu = findViewById(R.id.gameover_buttons);
 
+        menus.add(pitch_menu);
+        menus.add(hit_menu);
+        menus.add(out_menu);
+        menus.add(continue_menu);
+        menus.add(gameover_menu);
+
         undo_button = findViewById(R.id.undo_button);
         redo_button = findViewById(R.id.redo_button);
         continue_button = findViewById(R.id.continue_button);
 
-        findViewById(R.id.begin_button).setOnClickListener((View view) -> beginGame(view));
-
         findViewById(R.id.continue_button).setOnClickListener((View view) -> {
-            game.continueGame();
+            androidGame.continueGame();
             showMenu(pitch_menu);
+            updateMenu();
             displayGame();
         });
 
@@ -117,28 +121,38 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.undo_button).setOnClickListener((View view) -> undoGameAction());
         findViewById(R.id.redo_button).setOnClickListener((View view) -> redoGameAction());
 
-        findViewById(R.id.done_button).setOnClickListener((View view) -> finish());
+        findViewById(R.id.done_button).setOnClickListener((View view) -> done());
         findViewById(R.id.quit_button).setOnClickListener((View view) -> finish());
 
         findViewById(R.id.gameover_undo_button).setOnClickListener((View view) -> {
+            showMenu(pitch_menu);
             undoGameAction();
         });
 
-
+        if (savedInstanceState != null) {
+            int shownMenuID = savedInstanceState.getInt("shown_menu_id");
+            View menuToShow = findViewById(shownMenuID);
+            showMenu(menuToShow);
+            if (menuToShow == pitch_menu || androidGame.isWaiting()) {
+                updateMenu();
+            }
+        }
 
         displayGame();
     }
 
-    public void beginGame(View view)
-    {
-        findViewById(R.id.begin_buttons).setVisibility(View.GONE);
-        game.begin();
-        showMenu(pitch_menu);
-        displayGame();
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        for (View menu : menus) {
+            if (menu.getVisibility() == View.VISIBLE) {
+                outState.putInt("shown_menu_id", menu.getId());
+            }
+        }
     }
 
     public void pitchCalled(GameAndroid.PITCH_CALL_TYPES callType) {
-        game.pitchCalled(callType);
+        androidGame.pitchCalled(callType);
         String toastText = "";
         switch (callType) {
             case BALL:
@@ -154,7 +168,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void ballHit(GameAndroid.HIT_TYPES hitType) {
-        game.ballHit(hitType);
+        androidGame.ballHit(hitType);
         String toast_text = "";
         switch (hitType) {
             case SINGLE:
@@ -176,7 +190,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void outMade(GameAndroid.OUT_TYPES outType) {
-        game.outMade(outType);
+        androidGame.outMade(outType);
         String toastText = "";
         switch (outType) {
             case GROUNDOUT:
@@ -192,7 +206,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void undoGameAction() {
-        String action = game.undoGameAction();
+        String action = androidGame.undoGameAction();
         if (action == null) {
             action = "Cannot undo further...";
         }
@@ -202,7 +216,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void redoGameAction() {
-        String action = game.redoGameAction();
+        String action = androidGame.redoGameAction();
         if (action == null) {
             action = "Cannot redo further...";
         }
@@ -212,60 +226,61 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void updateMenu() {
-        if (game.undoAvailable())
-            undo_button.setBackgroundColor(getResources().getColor(R.color.button_color));
-        else
-            undo_button.setBackgroundColor(getResources().getColor(R.color.disabled_button_color));
-        if (game.redoAvailable())
-            redo_button.setBackgroundColor(getResources().getColor(R.color.button_color));
-        else
-            redo_button.setBackgroundColor(getResources().getColor(R.color.disabled_button_color));
-        if (!game.isWaiting && !game.isGameOver) {
-            showMenu(pitch_menu);
-        } else if (game.isWaiting) {
-            String continue_state = game.getWaitingState();
+        if (pitch_menu.getVisibility() == View.VISIBLE) {
+            if (androidGame.undoAvailable())
+                undo_button.setBackgroundColor(getResources().getColor(R.color.button_color));
+            else
+                undo_button.setBackgroundColor(getResources().getColor(R.color.disabled_button_color));
+
+            if (androidGame.redoAvailable())
+                redo_button.setBackgroundColor(getResources().getColor(R.color.button_color));
+            else
+                redo_button.setBackgroundColor(getResources().getColor(R.color.disabled_button_color));
+        }
+
+        if (androidGame.isWaiting()) {
+            String continue_state = androidGame.getWaitingState();
             continue_button.setText(continue_state);
             showMenu(continue_menu);
-        } else {
+        } else if (androidGame.isGameOver()) {
             showMenu(gameover_menu);
         }
     }
 
     public void cancelClicked(View view) {
         showMenu(pitch_menu);
+        updateMenu();
     }
 
-    public void showMenu(View menu) {
-        if (pitch_menu != menu) pitch_menu.setVisibility(View.GONE);
-        else pitch_menu.setVisibility(View.VISIBLE);
-        if (hit_menu != menu) hit_menu.setVisibility(View.GONE);
-        else hit_menu.setVisibility(View.VISIBLE);
-        if (out_menu != menu) out_menu.setVisibility(View.GONE);
-        else out_menu.setVisibility(View.VISIBLE);
-        if (continue_menu != menu) continue_menu.setVisibility(View.GONE);
-        else continue_menu.setVisibility(View.VISIBLE);
-        if (gameover_menu != menu) gameover_menu.setVisibility(View.GONE);
-        else gameover_menu.setVisibility(View.VISIBLE);
+    public void showMenu(View menuToShow) {
+        for (View menu : menus) {
+            if (menu != menuToShow) {
+                menu.setVisibility(View.GONE);
+            } else {
+                menu.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
     public void displayGame() {
-        String inning_text = (game.isTopInning() ? "TOP " : "BOT ") + game.getInning();
+        Game currentGame = androidGame.getCurrentGame();
+        String inning_text = (currentGame.isTopInning() ? "TOP " : "BOT ") + currentGame.getInning();
         inning_display.setText(inning_text);
-        home_runs_display.setText(Integer.toString(game.getHomeRuns()));
-        home_hits_display.setText(Integer.toString(game.getHomeHits()));
-        home_walks_display.setText(Integer.toString(game.getHomeWalks()));
-        away_runs_display.setText(Integer.toString(game.getAwayRuns()));
-        away_hits_display.setText(Integer.toString(game.getAwayHits()));
-        away_walks_display.setText(Integer.toString(game.getAwayWalks()));
-        count_display.setText(getString(R.string.count_text, game.getBalls(), game.getStrikes()));
-        message_display.setText(game.getMessage());
+        home_runs_display.setText(Integer.toString(currentGame.getHomeRuns()));
+        home_hits_display.setText(Integer.toString(currentGame.getHomeHits()));
+        home_walks_display.setText(Integer.toString(currentGame.getHomeWalks()));
+        away_runs_display.setText(Integer.toString(currentGame.getAwayRuns()));
+        away_hits_display.setText(Integer.toString(currentGame.getAwayHits()));
+        away_walks_display.setText(Integer.toString(currentGame.getAwayWalks()));
+        count_display.setText(getString(R.string.count_text, currentGame.getBalls(), currentGame.getStrikes()));
+        message_display.setText(currentGame.getMessage());
 
         int[] runners = new int[3];
         int[] outs = new int[3];
-        int numOuts = game.getOuts();
+        int numOuts = currentGame.getOuts();
         for (int i = 0; i < 3; i++) {
-            if (!game.isRunnerOnBase(i + 1))
+            if (!currentGame.isRunnerOnBase(i + 1))
                 runners[i] = R.drawable.base_empty;
             else
                 runners[i] = R.drawable.base_occupied;
@@ -280,6 +295,12 @@ public class GameActivity extends AppCompatActivity {
         out_1_display.setImageResource(outs[0]);
         out_2_display.setImageResource(outs[1]);
         out_3_display.setImageResource(outs[2]);
+    }
+
+    public void done()
+    {
+        androidGame.gameFinished();
+        finish();
     }
 
     private void makeToast(String toast_text) {

@@ -1,30 +1,45 @@
 package com.example.game;
 
-public class GameAndroid extends Game {
+public class GameAndroid {
     public enum PITCH_CALL_TYPES {BALL, STRIKE}
 
     public enum HIT_TYPES {SINGLE, DOUBLE, TRIPLE, HOMERUN}
 
     public enum OUT_TYPES {FLYOUT, GROUNDOUT}
 
-    private GameStack gameStack;
+    private static GameAndroid instance = null;
+    private Game currentGame = null;
+    private GameStack gameStack = null;
 
-    private boolean started = false;
+    private GameAndroid() {
+    }
 
-    public GameAndroid(int numInnings, String away_name, String home_name) {
-        super(numInnings, home_name, away_name);
-        gameStack = new GameStack(this);
+    public static GameAndroid getInstance() {
+        if (instance == null) {
+            instance = new GameAndroid();
+        }
+        return instance;
+    }
+
+    public void loadGame(Game game) {
+        this.currentGame = game;
+        this.gameStack = new GameStack(instance.currentGame);
+    }
+
+    public void newGame(int numInnings, String awayName, String homeName) {
+        this.currentGame = new Game(numInnings, awayName, homeName);
+        this.gameStack = new GameStack(instance.currentGame);
     }
 
     public void pitchCalled(PITCH_CALL_TYPES callType) {
         switch (callType) {
             case BALL:
                 gameStack.stackGameState("Ball");
-                callBall();
+                currentGame.callBall();
                 break;
             case STRIKE:
                 gameStack.stackGameState("Strike");
-                callStrike();
+                currentGame.callStrike();
                 break;
         }
     }
@@ -33,19 +48,19 @@ public class GameAndroid extends Game {
         switch (hit_type) {
             case SINGLE:
                 gameStack.stackGameState("Single");
-                advanceRunnersHit(1);
+                currentGame.advanceRunnersHit(1);
                 break;
             case DOUBLE:
                 gameStack.stackGameState("Double");
-                advanceRunnersHit(2);
+                currentGame.advanceRunnersHit(2);
                 break;
             case TRIPLE:
                 gameStack.stackGameState("Triple");
-                advanceRunnersHit(3);
+                currentGame.advanceRunnersHit(3);
                 break;
             case HOMERUN:
                 gameStack.stackGameState("Homerun");
-                advanceRunnersHit(4);
+                currentGame.advanceRunnersHit(4);
                 break;
         }
     }
@@ -54,11 +69,11 @@ public class GameAndroid extends Game {
         switch (out_type) {
             case GROUNDOUT:
                 gameStack.stackGameState("Groundout");
-                groundOut();
+                currentGame.groundOut();
                 break;
             case FLYOUT:
                 gameStack.stackGameState("Flyout");
-                flyOut();
+                currentGame.flyOut();
                 break;
         }
     }
@@ -70,8 +85,8 @@ public class GameAndroid extends Game {
 
     public String getWaitingState() {
         String waitingState = "";
-        if (isWaiting) {
-            if (checkInningOver()) {
+        if (currentGame.isWaiting) {
+            if (currentGame.checkInningOver()) {
                 waitingState = "Switch sides";
             } else {
                 waitingState = "Next batter";
@@ -80,8 +95,8 @@ public class GameAndroid extends Game {
         return waitingState;
     }
 
-    public void begin() {
-        started = true;
+    public Game getCurrentGame() {
+        return currentGame;
     }
 
     public String redoGameAction() {
@@ -96,5 +111,32 @@ public class GameAndroid extends Game {
         return gameStack.redoAvailable();
     }
 
-    public boolean hasStarted() { return started; }
+    public boolean isWaiting() {
+        return currentGame.isWaiting;
+    }
+
+    public boolean isGameOver() {
+        return currentGame.isGameOver;
+    }
+
+    public int getNumInnings() {
+        return currentGame.getNumInnings();
+    }
+
+    public String getAwayName() {
+        return currentGame.getAwayName();
+    }
+
+    public String getHomeName() {
+        return currentGame.getHomeName();
+    }
+
+    public void continueGame() {
+        currentGame.continueGame();
+    }
+
+    public void gameFinished()
+    {
+        this.currentGame = null;
+    }
 }

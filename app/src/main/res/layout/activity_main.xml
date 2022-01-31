@@ -17,6 +17,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
+            android:id="@+id/continue_game_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:text="Continue Game"
+            android:visibility="gone"/>
+
+        <Button
             android:id="@+id/new_game_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

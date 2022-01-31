@@ -11,7 +11,8 @@
         android:theme="@style/Theme.WiffleballScorekeeperApp">
         <activity
             android:name=".SetupNewGame"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Setup New Game"/>
         <activity
             android:name=".GameActivity"
             android:exported="false" />

@@ -9,13 +9,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
+import com.example.game.GameAndroid;
+
 public class SetupNewGame extends AppCompatActivity {
     final private static int DEFAULT_NUMBER_OF_INNINGS = 3;
     final private static int MAX_NUMBER_OF_INNINGS = 9;
 
-    public static final String EXTRA_NUMBER_OF_INNINGS = "com.example.wiffleballscorekeeperapp.setupnewgame.extra.NUMBER_OF_INNINGS";
-    public static final String EXTRA_AWAY_NAME = "com.example.wiffleballscorekeeperapp.setupnewgame.extra.AWAY_NAME";
-    public static final String EXTRA_HOME_NAME = "com.example.wiffleballscorekeeperapp.setupnewgame.extra.HOME_NAME";
+    final private static GameAndroid gameAndroid = GameAndroid.getInstance();
 
     private NumberPicker numberOfInningsPicker;
 
@@ -34,25 +34,25 @@ public class SetupNewGame extends AppCompatActivity {
         numberOfInningsPicker.setValue(DEFAULT_NUMBER_OF_INNINGS);
 
         findViewById(R.id.start_game_button).setOnClickListener((View view) -> launchNewGameActivity());
+        findViewById(R.id.cancel_new_game_button).setOnClickListener((View view) -> finish());
 
     }
 
     private void launchNewGameActivity()
     {
-        Intent intent = new Intent(this, GameActivity.class);
         int numberOfInnings = numberOfInningsPicker.getValue();
-
         EditText away_name_editText = findViewById(R.id.away_name_textEdit);
         EditText home_name_editText = findViewById(R.id.home_name_textEdit);
 
         String away_name = getTextWithHintAsDefault(away_name_editText);
         String home_name = getTextWithHintAsDefault(home_name_editText);
 
-        intent.putExtra(EXTRA_NUMBER_OF_INNINGS, numberOfInnings);
-        intent.putExtra(EXTRA_AWAY_NAME, away_name);
-        intent.putExtra(EXTRA_HOME_NAME, home_name);
+        gameAndroid.newGame(numberOfInnings, away_name, home_name);
+
+        Intent intent = new Intent(this, GameActivity.class);
 
         startActivity(intent);
+
         finish();
     }
 

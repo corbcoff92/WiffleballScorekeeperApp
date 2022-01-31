@@ -7,109 +7,100 @@
     android:layout_margin="16dp"
     tools:context=".SetupNewGame">
 
-    <TableLayout
-        android:id="@+id/tableLayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TableRow
+        <TableLayout
+            android:id="@+id/tableLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:layout_margin="16dp">
 
-            <TextView
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_span="2"
-                android:gravity="center"
-                android:text="Setup New Game"
-                android:textColor="@color/black"
-                android:textSize="30sp" />
-        </TableRow>
+                android:layout_height="match_parent">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Number of Innings: "
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Number of Innings: "
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+                <NumberPicker
+                    android:id="@+id/number_of_innings_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </TableRow>
 
-            <NumberPicker
-                android:id="@+id/number_of_innings_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Away Team Name: "
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/away_name_textEdit"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:maxLength="15"
-                android:hint="AWAY"
-                android:inputType="textCapCharacters" />
+                android:layout_height="wrap_content">
 
-        </TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Away Team Name: "
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/away_name_textEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:hint="AWAY"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="15" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home Team Name: "
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+            </TableRow>
 
-            <EditText
-                android:id="@+id/home_name_textEdit"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:maxLength="15"
-                android:hint="HOME"
-                android:inputType="textCapCharacters" />
-        </TableRow>
+                android:layout_height="wrap_content">
 
-    </TableLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Home Team Name: "
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/start_game_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="Start Game"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+                <EditText
+                    android:id="@+id/home_name_textEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:hint="HOME"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="15" />
+            </TableRow>
+
+        </TableLayout>
+
+        <Button
+            android:id="@+id/start_game_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:text="Start Game" />
+
+        <Button
+            android:id="@+id/cancel_new_game_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:text="Cancel" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
