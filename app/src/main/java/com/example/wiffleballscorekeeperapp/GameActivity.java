@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.customviews.GameView;
 import com.example.game.Game;
 import com.example.game.GameAndroid;
 
@@ -21,22 +22,8 @@ public class GameActivity extends AppCompatActivity {
 
     final private GameAndroid androidGame = GameAndroid.getInstance();
 
+    private GameView gameDisplay;
 
-    private TextView inning_display;
-    private TextView home_runs_display;
-    private TextView home_hits_display;
-    private TextView home_walks_display;
-    private TextView away_runs_display;
-    private TextView away_hits_display;
-    private TextView away_walks_display;
-    private TextView count_display;
-    private ImageView runner_first_display;
-    private ImageView runner_second_display;
-    private ImageView runner_third_display;
-    private ImageView out_1_display;
-    private ImageView out_2_display;
-    private ImageView out_3_display;
-    private TextView message_display;
     private View pitch_menu;
     private View hit_menu;
     private View out_menu;
@@ -53,33 +40,8 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        TextView heading_display;
-        TextView away_name_display;
-        TextView home_name_display;
-
-        heading_display = findViewById(R.id.heading_display);
-        away_name_display = findViewById(R.id.away_name_display);
-        home_name_display = findViewById(R.id.home_name_display);
-
-        heading_display.setText(String.format("%d inning-game", androidGame.getNumInnings()));
-        away_name_display.setText(androidGame.getAwayName());
-        home_name_display.setText(androidGame.getHomeName());
-
-        inning_display = findViewById(R.id.inning_display);
-        home_runs_display = findViewById(R.id.home_runs_display);
-        home_hits_display = findViewById(R.id.home_hits_display);
-        home_walks_display = findViewById(R.id.home_walks_display);
-        away_runs_display = findViewById(R.id.away_runs_display);
-        away_hits_display = findViewById(R.id.away_hits_display);
-        away_walks_display = findViewById(R.id.away_walks_display);
-        count_display = findViewById(R.id.count_display);
-        message_display = findViewById(R.id.message_display);
-        runner_first_display = findViewById(R.id.runner_first_display);
-        runner_second_display = findViewById(R.id.runner_second_display);
-        runner_third_display = findViewById(R.id.runner_third_display);
-        out_1_display = findViewById(R.id.out_1_display);
-        out_2_display = findViewById(R.id.out_2_display);
-        out_3_display = findViewById(R.id.out_3_display);
+        gameDisplay = findViewById(R.id.game_display);
+        gameDisplay.setHeadingText(String.format("%d inning-game", androidGame.getNumInnings()));
 
         pitch_menu = findViewById(R.id.pitch_buttons);
         hit_menu = findViewById(R.id.hit_buttons);
@@ -101,7 +63,7 @@ public class GameActivity extends AppCompatActivity {
             androidGame.continueGame();
             showMenu(pitch_menu);
             updateMenu();
-            displayGame();
+            gameDisplay.displayGame(androidGame.getCurrentGame());
         });
 
         findViewById(R.id.ball_button).setOnClickListener((View view) -> pitchCalled(GameAndroid.PITCH_CALL_TYPES.BALL));
@@ -139,7 +101,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
-        displayGame();
+        gameDisplay.displayGame(androidGame.getCurrentGame());
     }
 
     @Override
@@ -164,7 +126,7 @@ public class GameActivity extends AppCompatActivity {
                 break;
         }
         updateMenu();
-        displayGame();
+        gameDisplay.displayGame(androidGame.getCurrentGame());
         makeToast(toastText);
     }
 
@@ -186,7 +148,7 @@ public class GameActivity extends AppCompatActivity {
                 break;
         }
         updateMenu();
-        displayGame();
+        gameDisplay.displayGame(androidGame.getCurrentGame());
         makeToast(toast_text);
     }
 
@@ -202,7 +164,7 @@ public class GameActivity extends AppCompatActivity {
                 break;
         }
         updateMenu();
-        displayGame();
+        gameDisplay.displayGame(androidGame.getCurrentGame());
         makeToast(toastText);
     }
 
@@ -212,7 +174,7 @@ public class GameActivity extends AppCompatActivity {
             action = "Cannot undo further...";
         }
         updateMenu();
-        displayGame();
+        gameDisplay.displayGame(androidGame.getCurrentGame());
         makeToast("Undo: " + action);
     }
 
@@ -222,7 +184,7 @@ public class GameActivity extends AppCompatActivity {
             action = "Cannot redo further...";
         }
         updateMenu();
-        displayGame();
+        gameDisplay.displayGame(androidGame.getCurrentGame());
         makeToast("Redo: " + action);
     }
 
@@ -264,39 +226,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    public void displayGame() {
-        Game currentGame = androidGame.getCurrentGame();
-        String inning_text = (currentGame.isTopInning() ? "TOP " : "BOT ") + currentGame.getInning();
-        inning_display.setText(inning_text);
-        home_runs_display.setText(Integer.toString(currentGame.getHomeRuns()));
-        home_hits_display.setText(Integer.toString(currentGame.getHomeHits()));
-        home_walks_display.setText(Integer.toString(currentGame.getHomeWalks()));
-        away_runs_display.setText(Integer.toString(currentGame.getAwayRuns()));
-        away_hits_display.setText(Integer.toString(currentGame.getAwayHits()));
-        away_walks_display.setText(Integer.toString(currentGame.getAwayWalks()));
-        count_display.setText(getString(R.string.count_text, currentGame.getBalls(), currentGame.getStrikes()));
-        message_display.setText(currentGame.getMessage());
 
-        int[] runners = new int[3];
-        int[] outs = new int[3];
-        int numOuts = currentGame.getOuts();
-        for (int i = 0; i < 3; i++) {
-            if (!currentGame.isRunnerOnBase(i + 1))
-                runners[i] = R.drawable.base_empty;
-            else
-                runners[i] = R.drawable.base_occupied;
-            if (numOuts < i + 1)
-                outs[i] = R.drawable.out_empty;
-            else
-                outs[i] = R.drawable.out_full;
-        }
-        runner_first_display.setImageResource(runners[0]);
-        runner_second_display.setImageResource(runners[1]);
-        runner_third_display.setImageResource(runners[2]);
-        out_1_display.setImageResource(outs[0]);
-        out_2_display.setImageResource(outs[1]);
-        out_3_display.setImageResource(outs[2]);
-    }
 
     public void done()
     {
