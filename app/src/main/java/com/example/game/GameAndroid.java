@@ -21,14 +21,9 @@ public class GameAndroid {
         return instance;
     }
 
-    public void loadGame(Game game) {
-        this.currentGame = game;
-        this.gameStack = new GameStack(instance.currentGame);
-    }
-
     public void newGame(int numInnings, String awayName, String homeName) {
-        this.currentGame = new Game(numInnings, awayName, homeName);
-        this.gameStack = new GameStack(instance.currentGame);
+        currentGame = new Game(numInnings, awayName, homeName);
+        gameStack = new GameStack(currentGame);
     }
 
     public void pitchCalled(PITCH_CALL_TYPES callType) {
@@ -138,5 +133,17 @@ public class GameAndroid {
     public void gameFinished()
     {
         this.currentGame = null;
+    }
+
+    public String getCurrentGameJson()
+    {
+        return GameSaver.toJson(currentGame);
+    }
+
+    public void loadGameFromJson(String gameJson)
+    {
+        Game loadedGame = GameSaver.fromJson(gameJson);
+        currentGame = loadedGame;
+        gameStack = new GameStack(currentGame);
     }
 }

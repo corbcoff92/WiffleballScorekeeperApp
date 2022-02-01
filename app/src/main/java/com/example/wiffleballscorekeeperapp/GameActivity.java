@@ -3,6 +3,7 @@ package com.example.wiffleballscorekeeperapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -122,7 +123,7 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.redo_button).setOnClickListener((View view) -> redoGameAction());
 
         findViewById(R.id.done_button).setOnClickListener((View view) -> done());
-        findViewById(R.id.quit_button).setOnClickListener((View view) -> finish());
+        findViewById(R.id.quit_button).setOnClickListener((View view) -> quitGame());
 
         findViewById(R.id.gameover_undo_button).setOnClickListener((View view) -> {
             showMenu(pitch_menu);
@@ -300,6 +301,13 @@ public class GameActivity extends AppCompatActivity {
     public void done()
     {
         androidGame.gameFinished();
+        finish();
+    }
+
+    public void quitGame()
+    {
+        Intent intent = new Intent(this, GameSaverActivity.class);
+        startActivity(intent);
         finish();
     }
 

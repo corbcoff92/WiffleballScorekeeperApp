@@ -10,9 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WiffleballScorekeeperApp">
         <activity
+            android:name=".GameLoaderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GameSaverActivity"
+            android:exported="false" />
+        <activity
             android:name=".SetupNewGame"
             android:exported="false"
-            android:label="Setup New Game"/>
+            android:label="Setup New Game" />
         <activity
             android:name=".GameActivity"
             android:exported="false" />
