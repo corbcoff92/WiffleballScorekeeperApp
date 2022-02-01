@@ -71,14 +71,14 @@ public class Game {
         // Must create copies of Counts, Teams, and LinkedLists
         // because they are references to objects.
         count = new Count(game.count);
-        battingTeam = new Team(game.battingTeam);
-        pitchingTeam = new Team(game.pitchingTeam);
-        if (game.homeTeam == game.battingTeam) {
-            homeTeam = battingTeam;
-            awayTeam = pitchingTeam;
+        homeTeam = new Team(game.homeTeam);
+        awayTeam = new Team(game.awayTeam);
+        if (game.isTopOfInning) {
+            battingTeam = awayTeam;
+            pitchingTeam = homeTeam;
         } else {
-            homeTeam = pitchingTeam;
-            awayTeam = battingTeam;
+            battingTeam = homeTeam;
+            pitchingTeam = awayTeam;
         }
         outs = game.outs;
         runners = new LinkedList<Integer>(game.runners);
@@ -456,14 +456,14 @@ public class Game {
         NUM_INNINGS = game.NUM_INNINGS;
         inning = game.inning;
         count = game.count;
-        battingTeam = game.battingTeam;
-        pitchingTeam = game.pitchingTeam;
-        if (game.homeTeam == game.battingTeam) {
-            homeTeam = game.battingTeam;
-            awayTeam = game.pitchingTeam;
+        homeTeam = game.homeTeam;
+        awayTeam = game.awayTeam;
+        if (game.isTopOfInning) {
+            battingTeam = awayTeam;
+            pitchingTeam = homeTeam;
         } else {
-            homeTeam = game.pitchingTeam;
-            awayTeam = game.battingTeam;
+            battingTeam = homeTeam;
+            pitchingTeam = awayTeam;
         }
         outs = game.outs;
         runners = game.runners;

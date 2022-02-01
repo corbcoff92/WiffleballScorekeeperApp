@@ -1,76 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="8dp"
     tools:context=".GameSaverActivity">
 
-    <TextView
-        android:id="@+id/textview_save_slot1"
+    <LinearLayout
+        android:id="@+id/save_games_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="Slot 1"
-        android:textSize="50sp" />
-
-    <TextView
-        android:id="@+id/textview_save_slot2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textview_save_slot1"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="Slot 2"
-        android:textSize="50sp" />
-
-    <TextView
-        android:id="@+id/textview_save_slot3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textview_save_slot2"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="Slot 3"
-        android:textSize="50sp" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        android:layout_alignLeft="@id/textview_save_slot1"
-        android:layout_alignStart="@id/textview_save_slot1" />
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_dont_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't save"
-        android:layout_alignParentBottom="true"
         android:layout_alignBaseline="@id/button_save"
+        android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        android:layout_alignRight="@id/textview_save_slot1"
-        android:layout_alignEnd="@id/textview_save_slot1" />
+        android:text="Don't save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

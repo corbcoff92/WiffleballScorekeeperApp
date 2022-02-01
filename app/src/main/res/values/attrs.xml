@@ -3,4 +3,5 @@
     <declare-styleable name="GameView">
         <attr name="headingText" format="string" />
     </declare-styleable>
+    <declare-styleable name="EmptySlot"/>
 </resources>

@@ -1,76 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="8dp"
     tools:context=".GameSaverActivity">
 
-    <TextView
-        android:id="@+id/textview_load_slot1"
+    <LinearLayout
+        android:id="@+id/saved_games_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="Slot 1"
-        android:textSize="50sp" />
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <TextView
-        android:id="@+id/textview_load_slot2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textview_load_slot1"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="Slot 2"
-        android:textSize="50sp" />
-
-    <TextView
-        android:id="@+id/textview_load_slot3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textview_load_slot2"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:gravity="center"
-        android:text="Slot 3"
-        android:textSize="50sp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/button_load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:text="Load"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:layout_alignLeft="@id/textview_load_slot1"
-        android:layout_alignStart="@id/textview_load_slot1" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/saved_games_layout"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_load"
+        app:layout_constraintEnd_toStartOf="@+id/button_cancel_load"
+        app:layout_constraintStart_toEndOf="@+id/button_load" />
 
     <Button
         android:id="@+id/button_cancel_load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:text="Cancel"
-        android:layout_alignParentBottom="true"
-        android:layout_alignBaseline="@id/button_load"
-        android:layout_margin="16dp"
-        android:layout_alignRight="@id/textview_load_slot1"
-        android:layout_alignEnd="@id/textview_load_slot1" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_delete"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

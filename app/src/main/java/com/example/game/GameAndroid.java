@@ -1,5 +1,7 @@
 package com.example.game;
 
+import com.example.wiffleballscorekeeperapp.GameSaver;
+
 public class GameAndroid {
     public enum PITCH_CALL_TYPES {BALL, STRIKE}
 
@@ -118,14 +120,6 @@ public class GameAndroid {
         return currentGame.getNumInnings();
     }
 
-    public String getAwayName() {
-        return currentGame.getAwayName();
-    }
-
-    public String getHomeName() {
-        return currentGame.getHomeName();
-    }
-
     public void continueGame() {
         currentGame.continueGame();
     }
@@ -135,15 +129,9 @@ public class GameAndroid {
         this.currentGame = null;
     }
 
-    public String getCurrentGameJson()
+    public void loadGame(Game game)
     {
-        return GameSaver.toJson(currentGame);
-    }
-
-    public void loadGameFromJson(String gameJson)
-    {
-        Game loadedGame = GameSaver.fromJson(gameJson);
-        currentGame = loadedGame;
+        currentGame = new Game(game);
         gameStack = new GameStack(currentGame);
     }
 }
