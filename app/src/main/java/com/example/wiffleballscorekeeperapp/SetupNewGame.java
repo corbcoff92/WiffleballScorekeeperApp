@@ -9,13 +9,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
-import com.example.game.GameAndroid;
-
 public class SetupNewGame extends AppCompatActivity {
     final private static int DEFAULT_NUMBER_OF_INNINGS = 3;
     final private static int MAX_NUMBER_OF_INNINGS = 9;
 
-    final private static GameAndroid gameAndroid = GameAndroid.getInstance();
+    final private GameAndroid gameAndroid = GameAndroid.getInstance();
 
     private NumberPicker numberOfInningsPicker;
 

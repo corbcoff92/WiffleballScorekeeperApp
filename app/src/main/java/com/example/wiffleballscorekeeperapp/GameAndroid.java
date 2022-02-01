@@ -1,17 +1,23 @@
-package com.example.game;
+package com.example.wiffleballscorekeeperapp;
 
-import com.example.wiffleballscorekeeperapp.GameSaver;
+import android.content.Context;
+import android.widget.Toast;
 
-public class GameAndroid {
-    public enum PITCH_CALL_TYPES {BALL, STRIKE}
+import com.example.game.Game;
+import com.example.game.GameStack;
 
-    public enum HIT_TYPES {SINGLE, DOUBLE, TRIPLE, HOMERUN}
+class GameAndroid {
 
-    public enum OUT_TYPES {FLYOUT, GROUNDOUT}
+    enum PITCH_CALL_TYPES {BALL, STRIKE}
+
+    enum HIT_TYPES {SINGLE, DOUBLE, TRIPLE, HOMERUN}
+
+    enum OUT_TYPES {FLYOUT, GROUNDOUT}
 
     private static GameAndroid instance = null;
     private Game currentGame = null;
     private GameStack gameStack = null;
+    private static Toast toaster;
 
     private GameAndroid() {
     }
@@ -23,12 +29,12 @@ public class GameAndroid {
         return instance;
     }
 
-    public void newGame(int numInnings, String awayName, String homeName) {
+    void newGame(int numInnings, String awayName, String homeName) {
         currentGame = new Game(numInnings, awayName, homeName);
         gameStack = new GameStack(currentGame);
     }
 
-    public void pitchCalled(PITCH_CALL_TYPES callType) {
+    void pitchCalled(PITCH_CALL_TYPES callType) {
         switch (callType) {
             case BALL:
                 gameStack.stackGameState("Ball");
@@ -41,7 +47,7 @@ public class GameAndroid {
         }
     }
 
-    public void ballHit(HIT_TYPES hit_type) {
+    void ballHit(HIT_TYPES hit_type) {
         switch (hit_type) {
             case SINGLE:
                 gameStack.stackGameState("Single");
@@ -62,7 +68,7 @@ public class GameAndroid {
         }
     }
 
-    public void outMade(OUT_TYPES out_type) {
+    void outMade(OUT_TYPES out_type) {
         switch (out_type) {
             case GROUNDOUT:
                 gameStack.stackGameState("Groundout");
@@ -75,12 +81,12 @@ public class GameAndroid {
         }
     }
 
-    public String undoGameAction() {
+    String undoGameAction() {
         return gameStack.undoLastAction();
 
     }
 
-    public String getWaitingState() {
+    String getWaitingState() {
         String waitingState = "";
         if (currentGame.isWaiting) {
             if (currentGame.checkInningOver()) {
@@ -92,46 +98,52 @@ public class GameAndroid {
         return waitingState;
     }
 
-    public Game getCurrentGame() {
+    Game getCurrentGame() {
         return currentGame;
     }
 
-    public String redoGameAction() {
+    String redoGameAction() {
         return gameStack.redoLastAction();
     }
 
-    public boolean undoAvailable() {
+    boolean undoAvailable() {
         return gameStack.undoAvailable();
     }
 
-    public boolean redoAvailable() {
+    boolean redoAvailable() {
         return gameStack.redoAvailable();
     }
 
-    public boolean isWaiting() {
+    boolean isWaiting() {
         return currentGame.isWaiting;
     }
 
-    public boolean isGameOver() {
+    boolean isGameOver() {
         return currentGame.isGameOver;
     }
 
-    public int getNumInnings() {
+    int getNumInnings() {
         return currentGame.getNumInnings();
     }
 
-    public void continueGame() {
+    void continueGame() {
         currentGame.continueGame();
     }
 
-    public void gameFinished()
-    {
+    void gameFinished() {
         this.currentGame = null;
     }
 
-    public void loadGame(Game game)
-    {
+    void loadGame(Game game) {
         currentGame = new Game(game);
         gameStack = new GameStack(currentGame);
+    }
+
+    static void makeToast(Context context, String text) {
+        if (toaster == null) {
+            toaster = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+        }
+        toaster.setText(text);
+        toaster.show();
     }
 }

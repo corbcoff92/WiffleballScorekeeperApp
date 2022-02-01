@@ -37,7 +37,7 @@ public class Game {
      * @param homeTeamName The desired name for the home team. Can only be a maximum of 10 characters.
      * @param awayTeamName The desired name for the away team. Can only be a maximum of 10 characters.
      */
-    Game(int numInnings, String awayTeamName, String homeTeamName) {
+    public Game(int numInnings, String awayTeamName, String homeTeamName) {
         NUM_INNINGS = numInnings;
         inning = 1;
         isTopOfInning = true;
@@ -61,7 +61,7 @@ public class Game {
      *
      * @param game Game instance that is to be copied.
      */
-    Game(final Game game) {
+    public Game(final Game game) {
         isGameOver = game.isGameOver;
         isWaiting = game.isWaiting;
         isTopOfInning = game.isTopOfInning;
@@ -90,7 +90,7 @@ public class Game {
      * the runners are advanced, and the {@code isGameOver} condition is update. If the
      * game is not determined to be over, the count is reset.
      */
-    void callBall() {
+    public void callBall() {
         message = "Ball";
         count.balls++;
 
@@ -108,7 +108,7 @@ public class Game {
      * an out is recorded, the {@code isGameOver} condition is updated, and the count is reset.
      * If the game is to continue and the current half-inning has ended, a new half-inning is began.
      */
-    void callStrike() {
+    public void callStrike() {
         message = "Strike";
         count.strikes++;
         if (count.checkStrikeout()) {
@@ -124,7 +124,7 @@ public class Game {
      *
      * @param numBases The total number of bases that each runner should advance as the result of a hit.
      */
-    void advanceRunnersHit(int numBases) {
+    public void advanceRunnersHit(int numBases) {
         // Set hit type as game message based on the number of bases.
         switch (numBases) {
             case 1:
@@ -205,7 +205,7 @@ public class Game {
      * the game is to continue and the current half-inning has ended, a new half-inning is
      * also began.
      */
-    void flyOut() {
+    public void flyOut() {
         message = "Flyout";
         outMade();
     }
@@ -216,7 +216,7 @@ public class Game {
      * the game is to continue and the current half-inning has ended, a new half-inning is
      * also began.
      */
-    void groundOut() {
+    public void groundOut() {
         message = "Groundout";
         outMade();
     }

@@ -1,19 +1,14 @@
 package com.example.wiffleballscorekeeperapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.customviews.GameView;
-import com.example.game.Game;
-import com.example.game.GameAndroid;
 
 import java.util.ArrayList;
 
@@ -33,7 +28,6 @@ public class GameActivity extends AppCompatActivity {
     private Button undo_button;
     private Button redo_button;
     private Button continue_button;
-    private Toast toaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +121,7 @@ public class GameActivity extends AppCompatActivity {
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        makeToast(toastText);
+        androidGame.makeToast(this, toastText);
     }
 
     private void ballHit(GameAndroid.HIT_TYPES hitType) {
@@ -149,7 +143,7 @@ public class GameActivity extends AppCompatActivity {
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        makeToast(toast_text);
+        androidGame.makeToast(this, toast_text);
     }
 
     private void outMade(GameAndroid.OUT_TYPES outType) {
@@ -165,7 +159,7 @@ public class GameActivity extends AppCompatActivity {
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        makeToast(toastText);
+        androidGame.makeToast(this, toastText);
     }
 
     private void undoGameAction() {
@@ -175,7 +169,7 @@ public class GameActivity extends AppCompatActivity {
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        makeToast("Undo: " + action);
+        androidGame.makeToast(this, "Undo: " + action);
     }
 
     private void redoGameAction() {
@@ -185,7 +179,7 @@ public class GameActivity extends AppCompatActivity {
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        makeToast("Redo: " + action);
+        androidGame.makeToast(this, "Redo: " + action);
     }
 
     private void updateMenu() {
@@ -239,13 +233,5 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GameSaverActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private void makeToast(String toast_text) {
-        if (toaster == null) {
-            toaster = Toast.makeText(this, toast_text, Toast.LENGTH_SHORT);
-        }
-        toaster.setText(toast_text);
-        toaster.show();
     }
 }

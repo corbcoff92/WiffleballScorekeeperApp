@@ -3,13 +3,10 @@ package com.example.wiffleballscorekeeperapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-import com.example.game.GameAndroid;
 
 public class MainActivity extends AppCompatActivity {
     final private String LOG_TAG = this.getClass().getSimpleName();
@@ -23,9 +20,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.new_game_button).setOnClickListener((View view) -> nextActvity(ACTIVITIES.NEW_GAME));
-        findViewById(R.id.load_game_button).setOnClickListener((View view) -> nextActvity(ACTIVITIES.LOAD_GAME));
-        findViewById(R.id.continue_game_button).setOnClickListener((View view) -> nextActvity(ACTIVITIES.CONTINUE_GAME));
+        findViewById(R.id.new_game_button).setOnClickListener((View view) -> nextActivity(ACTIVITIES.NEW_GAME));
+        findViewById(R.id.load_game_button).setOnClickListener((View view) -> nextActivity(ACTIVITIES.LOAD_GAME));
+        findViewById(R.id.continue_game_button).setOnClickListener((View view) -> nextActivity(ACTIVITIES.CONTINUE_GAME));
         findViewById(R.id.exit_button).setOnClickListener((View view) -> finish());
     }
 
@@ -40,20 +37,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void nextActvity(ACTIVITIES activity) {
-        Class activityClass = null;
+    private void nextActivity(ACTIVITIES activity) {
+        Intent intent = null;
         switch (activity) {
             case NEW_GAME:
-                activityClass = SetupNewGame.class;
+                intent = new Intent(this, SetupNewGame.class);
                 break;
             case LOAD_GAME:
-                activityClass = GameLoaderActivity.class;
+                intent = new Intent(this, GameLoaderActivity.class);
                 break;
             case CONTINUE_GAME:
-                activityClass = GameActivity.class;
+                intent = new Intent(this, GameActivity.class);
                 break;
         }
-        Intent intent = new Intent(this, activityClass);
         startActivity(intent);
     }
 }
