@@ -44,17 +44,8 @@ class Count
     }
 
     /**
-     * Produces a formatted string representing this count, that can then be printed to the screen.
-     * @return The formatted display string representing this count, which can be printed to the screen.
-     */
-    public String getDisplayString()
-    {
-        return balls + "-" + strikes;
-    }
-
-    /**
-     * Determines whether or not this count should result in a walk. 
-     * The count does not reset itself when a walk is determined, thus 
+     * Determines whether or not this count should result in a walk.
+     * The count does not reset itself when a walk is determined, thus
      * the controlling class should call the {@code reset} method when
      * the count should be reset.
      * @return  Boolean indicating whether this count should result in a walk.

@@ -1,10 +1,8 @@
-package com.example.customviews;
+package com.example.wiffleballscorekeeperapp.customviews;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -12,30 +10,31 @@ import android.widget.TextView;
 import com.example.game.Game;
 import com.example.wiffleballscorekeeperapp.R;
 
+import java.util.Locale;
+
 public class GameView extends TableLayout {
-    private TextView inning_display;
-    private TextView home_name_display;
-    private TextView home_runs_display;
-    private TextView home_hits_display;
-    private TextView home_walks_display;
-    private TextView away_name_display;
-    private TextView away_runs_display;
-    private TextView away_hits_display;
-    private TextView away_walks_display;
-    private TextView count_display;
-    private ImageView runner_first_display;
-    private ImageView runner_second_display;
-    private ImageView runner_third_display;
-    private ImageView out_1_display;
-    private ImageView out_2_display;
-    private ImageView out_3_display;
-    private TextView message_display;
+    final private TextView inning_display;
+    final private TextView home_name_display;
+    final private TextView home_runs_display;
+    final private TextView home_hits_display;
+    final private TextView home_walks_display;
+    final private TextView away_name_display;
+    final private TextView away_runs_display;
+    final private TextView away_hits_display;
+    final private TextView away_walks_display;
+    final private TextView count_display;
+    final private ImageView runner_first_display;
+    final private ImageView runner_second_display;
+    final private ImageView runner_third_display;
+    final private ImageView out_1_display;
+    final private ImageView out_2_display;
+    final private ImageView out_3_display;
+    final private TextView message_display;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         inflate(context, R.layout.game_view, this);
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.GameView);
-        TextView heading_textview = findViewById(R.id.heading_display);
         setHeadingText(attributes.getString(R.styleable.GameView_headingText));
         attributes.recycle();
 
@@ -70,13 +69,13 @@ public class GameView extends TableLayout {
         inning_display.setText(inning_text);
         home_name_display.setText(game.getHomeName());
         away_name_display.setText(game.getAwayName());
-        home_runs_display.setText(Integer.toString(game.getHomeRuns()));
-        home_hits_display.setText(Integer.toString(game.getHomeHits()));
-        home_walks_display.setText(Integer.toString(game.getHomeWalks()));
-        away_runs_display.setText(Integer.toString(game.getAwayRuns()));
-        away_hits_display.setText(Integer.toString(game.getAwayHits()));
-        away_walks_display.setText(Integer.toString(game.getAwayWalks()));
-        count_display.setText(getResources().getString(R.string.count_text, game.getBalls(), game.getStrikes()));
+        home_runs_display.setText(String.format(Locale.US, "%d",game.getHomeRuns()));
+        home_hits_display.setText(String.format(Locale.US,"%d",game.getHomeHits()));
+        home_walks_display.setText(String.format(Locale.US, "%d",game.getHomeWalks()));
+        away_runs_display.setText(String.format(Locale.US, "%d", game.getAwayRuns()));
+        away_hits_display.setText(String.format(Locale.US, "%d", game.getAwayHits()));
+        away_walks_display.setText(String.format(Locale.US, "%d", game.getAwayWalks()));
+        count_display.setText(String.format(Locale.US, "%d - %d", game.getBalls(), game.getStrikes()));
         message_display.setText(game.getMessage());
 
         int[] runners = new int[3];

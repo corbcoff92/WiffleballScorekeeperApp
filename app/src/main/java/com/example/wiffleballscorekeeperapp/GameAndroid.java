@@ -1,18 +1,19 @@
 package com.example.wiffleballscorekeeperapp;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.widget.Toast;
 
 import com.example.game.Game;
 import com.example.game.GameStack;
 
-class GameAndroid {
+public class GameAndroid {
 
-    enum PITCH_CALL_TYPES {BALL, STRIKE}
+    public enum PITCH_CALL_TYPES {BALL, STRIKE}
 
-    enum HIT_TYPES {SINGLE, DOUBLE, TRIPLE, HOMERUN}
+    public enum HIT_TYPES {SINGLE, DOUBLE, TRIPLE, HOMERUN}
 
-    enum OUT_TYPES {FLYOUT, GROUNDOUT}
+    public enum OUT_TYPES {FLYOUT, GROUNDOUT}
 
     private static GameAndroid instance = null;
     private Game currentGame = null;
@@ -29,108 +30,108 @@ class GameAndroid {
         return instance;
     }
 
-    void newGame(int numInnings, String awayName, String homeName) {
+    public void newGame(int numInnings, String awayName, String homeName) {
         currentGame = new Game(numInnings, awayName, homeName);
         gameStack = new GameStack(currentGame);
     }
 
-    void pitchCalled(PITCH_CALL_TYPES callType) {
+    public void pitchCalled(PITCH_CALL_TYPES callType) {
         switch (callType) {
             case BALL:
-                gameStack.stackGameState("Ball");
+                gameStack.stackGameState(Resources.getSystem().getString(R.string.ball_text));
                 currentGame.callBall();
                 break;
             case STRIKE:
-                gameStack.stackGameState("Strike");
+                gameStack.stackGameState(Resources.getSystem().getString(R.string.strike_text));
                 currentGame.callStrike();
                 break;
         }
     }
 
-    void ballHit(HIT_TYPES hit_type) {
+    public void ballHit(HIT_TYPES hit_type) {
         switch (hit_type) {
             case SINGLE:
-                gameStack.stackGameState("Single");
+                gameStack.stackGameState(Resources.getSystem().getString(R.string.single_text));
                 currentGame.advanceRunnersHit(1);
                 break;
             case DOUBLE:
-                gameStack.stackGameState("Double");
+                gameStack.stackGameState(Resources.getSystem().getString(R.string.double_text));
                 currentGame.advanceRunnersHit(2);
                 break;
             case TRIPLE:
-                gameStack.stackGameState("Triple");
+                gameStack.stackGameState(Resources.getSystem().getString(R.string.triple_text));
                 currentGame.advanceRunnersHit(3);
                 break;
             case HOMERUN:
-                gameStack.stackGameState("Homerun");
+                gameStack.stackGameState(Resources.getSystem().getString(R.string.homerun_text));
                 currentGame.advanceRunnersHit(4);
                 break;
         }
     }
 
-    void outMade(OUT_TYPES out_type) {
+    public void outMade(OUT_TYPES out_type) {
         switch (out_type) {
             case GROUNDOUT:
-                gameStack.stackGameState("Groundout");
+                gameStack.stackGameState(Resources.getSystem().getString(R.string.groundout_text));
                 currentGame.groundOut();
                 break;
             case FLYOUT:
-                gameStack.stackGameState("Flyout");
+                gameStack.stackGameState(Resources.getSystem().getString(R.string.flyout_text));
                 currentGame.flyOut();
                 break;
         }
     }
 
-    String undoGameAction() {
+    public String undoGameAction() {
         return gameStack.undoLastAction();
 
     }
 
-    String getWaitingState() {
+    public String getWaitingState() {
         String waitingState = "";
         if (currentGame.isWaiting) {
             if (currentGame.checkInningOver()) {
-                waitingState = "Switch sides";
+                waitingState = Resources.getSystem().getString(R.string.next_inning_text);
             } else {
-                waitingState = "Next batter";
+                waitingState = Resources.getSystem().getString(R.string.next_batter_text);
             }
         }
         return waitingState;
     }
 
-    Game getCurrentGame() {
+    public Game getCurrentGame() {
         return currentGame;
     }
 
-    String redoGameAction() {
+    public String redoGameAction() {
         return gameStack.redoLastAction();
     }
 
-    boolean undoAvailable() {
+    public boolean undoAvailable() {
         return gameStack.undoAvailable();
     }
 
-    boolean redoAvailable() {
+    public boolean redoAvailable() {
         return gameStack.redoAvailable();
     }
 
-    boolean isWaiting() {
+    public boolean isWaiting() {
         return currentGame.isWaiting;
     }
 
-    boolean isGameOver() {
+    public boolean isGameOver() {
         return currentGame.isGameOver;
     }
 
-    int getNumInnings() {
+    public int getNumInnings() {
         return currentGame.getNumInnings();
     }
 
-    void continueGame() {
+    public void continueGame() {
         currentGame.continueGame();
     }
 
-    void gameFinished() {
+    public void gameFinished() {
         this.currentGame = null;
     }
 
@@ -139,7 +140,7 @@ class GameAndroid {
         gameStack = new GameStack(currentGame);
     }
 
-    static void makeToast(Context context, String text) {
+    public static void makeToast(Context context, String text) {
         if (toaster == null) {
             toaster = Toast.makeText(context, text, Toast.LENGTH_SHORT);
         }

@@ -1,9 +1,13 @@
-package com.example.wiffleballscorekeeperapp;
+package com.example.wiffleballscorekeeperapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.LinearLayout;
+
+import com.example.wiffleballscorekeeperapp.GameAndroid;
+import com.example.wiffleballscorekeeperapp.GameLoaderSaver;
+import com.example.wiffleballscorekeeperapp.R;
 
 public class GameSaverActivity extends AppCompatActivity {
     private GameLoaderSaver gameSaver;

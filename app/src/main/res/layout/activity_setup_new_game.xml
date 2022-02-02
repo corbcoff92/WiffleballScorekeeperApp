@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="16dp"
-    tools:context=".SetupNewGame">
+    tools:context=".activities.SetupNewGameActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +25,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="Number of Innings: "
+                    android:text="@string/number_of_innings_text"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -44,7 +43,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Away Team Name: "
+                    android:text="@string/away_team_name_text"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -54,9 +53,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:hint="AWAY"
+                    android:hint="@string/away_default_name"
                     android:inputType="textCapCharacters"
-                    android:maxLength="15" />
+                    android:maxLength="15"
+                    android:autofillHints="name" />
 
             </TableRow>
 
@@ -67,7 +67,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Home Team Name: "
+                    android:text="@string/home_team_name_text"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -77,9 +77,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:hint="HOME"
+                    android:hint="@string/home_default_name"
                     android:inputType="textCapCharacters"
-                    android:maxLength="15" />
+                    android:maxLength="15"
+                    android:autofillHints="name" />
             </TableRow>
 
         </TableLayout>
@@ -90,7 +91,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:text="Start Game" />
+            android:text="@string/start_game_text" />
 
         <Button
             android:id="@+id/cancel_new_game_button"
@@ -100,7 +101,7 @@
             android:layout_marginBottom="16dp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:text="Cancel" />
+            android:text="@string/cancel_text" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

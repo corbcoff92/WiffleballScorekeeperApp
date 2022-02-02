@@ -5,15 +5,18 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.example.customviews.EmptySlot;
-import com.example.customviews.GameView;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.example.wiffleballscorekeeperapp.customviews.EmptySlot;
+import com.example.wiffleballscorekeeperapp.customviews.GameView;
 import com.example.game.Game;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Locale;
 
-class GameLoaderSaver {
+public class GameLoaderSaver {
     private final String SAVED_GAMES_KEY = "SAVED_GAMES";
     final private GameAndroid gameAndroid = GameAndroid.getInstance();
     final private Context context;
@@ -24,7 +27,7 @@ class GameLoaderSaver {
     private boolean hasSavedGames;
     private int selectedSlotNumber = -1;
 
-    GameLoaderSaver(Context context, LinearLayout savedGamesLayout, boolean loader) {
+    public GameLoaderSaver(Context context, LinearLayout savedGamesLayout, boolean loader) {
         this.context = context;
         this.savedGamesLayout = savedGamesLayout;
         this.loader = loader;
@@ -36,14 +39,14 @@ class GameLoaderSaver {
         for (int i = 0; i < savedGamesLayout.getChildCount(); i++) {
             View gameView = savedGamesLayout.getChildAt(i);
             if (gameView == view) {
-                gameView.setBackground(context.getResources().getDrawable(R.drawable.selected_border));
+                gameView.setBackground(ResourcesCompat.getDrawable(context.getResources(),R.drawable.selected_border, null));
             } else {
                 gameView.setBackground(null);
             }
         }
     }
 
-    boolean loadGame() {
+    public boolean loadGame() {
         boolean gameLoaded = false;
         if (hasSavedGames) {
             if (selectedSlotNumber >= 0 && selectedSlotNumber < 3) {
@@ -51,18 +54,18 @@ class GameLoaderSaver {
                 gameAndroid.loadGame(game);
                 savedGames[selectedSlotNumber] = null;
                 storeSavedGames();
-                GameAndroid.makeToast(context, "Game loaded...");
+                GameAndroid.makeToast(context, context.getString(R.string.game_loaded_text));
                 gameLoaded = true;
             } else {
-                GameAndroid.makeToast(context, "Please first select a game slot...");
+                GameAndroid.makeToast(context, context.getString(R.string.no_slot_selected));
             }
         } else {
-            GameAndroid.makeToast(context, "No games to load...");
+            GameAndroid.makeToast(context, context.getString(R.string.no_saved_games, context.getString(R.string.load_text)));
         }
         return gameLoaded;
     }
 
-    void deleteSavedGame() {
+    public void deleteSavedGame() {
         if (hasSavedGames) {
             if (selectedSlotNumber >= 0 && selectedSlotNumber < 3) {
                 savedGames[selectedSlotNumber] = null;
@@ -70,23 +73,23 @@ class GameLoaderSaver {
                 selectedSlotNumber = -1;
                 updateGameViews();
             } else {
-                GameAndroid.makeToast(context, "Please first select a game slot...");
+                GameAndroid.makeToast(context, context.getString(R.string.no_slot_selected));
             }
         } else {
-            GameAndroid.makeToast(context, "No saved games to delete...");
+            GameAndroid.makeToast(context, context.getString(R.string.no_saved_games,context.getString(R.string.delete_text)));
         }
     }
 
-    boolean saveGame() {
+    public boolean saveGame() {
         boolean gameSaved = false;
         if (selectedSlotNumber >= 0 && selectedSlotNumber < 3) {
 
             savedGames[selectedSlotNumber] = gameAndroid.getCurrentGame();
             storeSavedGames();
-            GameAndroid.makeToast(context, "Game saved...");
+            GameAndroid.makeToast(context, context.getString(R.string.game_saved_text));
             gameSaved = true;
         } else {
-            GameAndroid.makeToast(context, "Please first select a game slot...");
+            GameAndroid.makeToast(context, context.getString(R.string.no_slot_selected));
         }
         return gameSaved;
     }
@@ -102,10 +105,12 @@ class GameLoaderSaver {
                 GameView gameView = new GameView(context, null);
                 gameView.displayGame(game);
                 gameView.setOnClickListener(view -> selectSlotNum(view, slotNumber));
+                gameView.setHeadingText(context.getString(R.string.empty_slot_text, slotNumber+1));
                 savedGamesLayout.addView(gameView);
                 hasSavedGames = true;
             } else {
                 EmptySlot emptyView = new EmptySlot(context);
+                emptyView.setText(context.getString(R.string.empty_slot_text, slotNumber+1));
                 if (!loader) {
                     emptyView.setClickable(true);
                     emptyView.setOnClickListener(view -> selectSlotNum(view, slotNumber));

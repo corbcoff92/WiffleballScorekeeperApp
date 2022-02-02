@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="8dp"
-    tools:context=".GameSaverActivity">
+    tools:context=".activities.GameSaverActivity">
 
     <LinearLayout
         android:id="@+id/saved_games_layout"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:text="Load"
+        android:text="@string/load_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/saved_games_layout"
@@ -33,7 +33,7 @@
         android:id="@+id/button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete"
+        android:text="@string/delete_text"
         app:layout_constraintBaseline_toBaselineOf="@+id/button_load"
         app:layout_constraintEnd_toStartOf="@+id/button_cancel_load"
         app:layout_constraintStart_toEndOf="@+id/button_load" />
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:text="Cancel"
+        android:text="@string/cancel_text"
         app:layout_constraintBaseline_toBaselineOf="@+id/button_delete"
         app:layout_constraintEnd_toEndOf="parent" />
 

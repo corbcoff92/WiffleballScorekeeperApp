@@ -1,4 +1,4 @@
-package com.example.wiffleballscorekeeperapp;
+package com.example.wiffleballscorekeeperapp.activities;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,9 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
-    final private String LOG_TAG = this.getClass().getSimpleName();
+import com.example.wiffleballscorekeeperapp.GameAndroid;
+import com.example.wiffleballscorekeeperapp.R;
 
+public class MainActivity extends AppCompatActivity {
     private enum ACTIVITIES {NEW_GAME, LOAD_GAME, CONTINUE_GAME}
 
     final private GameAndroid gameAndroid = GameAndroid.getInstance();
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = null;
         switch (activity) {
             case NEW_GAME:
-                intent = new Intent(this, SetupNewGame.class);
+                intent = new Intent(this, SetupNewGameActivity.class);
                 break;
             case LOAD_GAME:
                 intent = new Intent(this, GameLoaderActivity.class);

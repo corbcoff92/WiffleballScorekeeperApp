@@ -1,4 +1,4 @@
-package com.example.wiffleballscorekeeperapp;
+package com.example.wiffleballscorekeeperapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,7 +9,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
-public class SetupNewGame extends AppCompatActivity {
+import com.example.wiffleballscorekeeperapp.GameAndroid;
+import com.example.wiffleballscorekeeperapp.R;
+
+public class SetupNewGameActivity extends AppCompatActivity {
     final private static int DEFAULT_NUMBER_OF_INNINGS = 3;
     final private static int MAX_NUMBER_OF_INNINGS = 9;
 

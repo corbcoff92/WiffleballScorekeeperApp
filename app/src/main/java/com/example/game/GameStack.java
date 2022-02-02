@@ -5,11 +5,10 @@ import java.util.HashMap;
 
 
 public class GameStack {
-    private LinkedList<HashMap> undoStack = new LinkedList<>();
-    private LinkedList<HashMap> redoStack = new LinkedList<>();
+    final private LinkedList<HashMap<String, Game>> undoStack = new LinkedList<>();
+    final private LinkedList<HashMap<String, Game>> redoStack = new LinkedList<>();
 
-    private Game game;
-    private HashMap currentState;
+    final private Game game;
 
     public GameStack(Game game) {
         this.game = game;
@@ -19,7 +18,7 @@ public class GameStack {
         if (redoAvailable()) {
             redoStack.clear();
         }
-        undoStack.push(new HashMap() {{
+        undoStack.push(new HashMap<String, Game>() {{
             put(action, new Game(game));
         }});
     }
@@ -36,7 +35,7 @@ public class GameStack {
         if (redoAvailable()) {
             HashMap<String, Game> lastGameState = redoStack.pop();
             String action = lastGameState.keySet().iterator().next();
-            undoStack.push(new HashMap() {{
+            undoStack.push(new HashMap<String, Game>() {{
                 put(action, new Game(game));
             }});
             game.redo(lastGameState);
@@ -50,7 +49,7 @@ public class GameStack {
         if (undoAvailable()) {
             HashMap<String, Game> lastGameState = undoStack.pop();
             String action = lastGameState.keySet().iterator().next();
-            redoStack.push(new HashMap() {{
+            redoStack.push(new HashMap <String, Game>() {{
                 put(action, new Game(game));
             }});
             game.undo(lastGameState);

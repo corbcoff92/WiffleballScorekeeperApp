@@ -1,20 +1,20 @@
-package com.example.wiffleballscorekeeperapp;
+package com.example.wiffleballscorekeeperapp.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.customviews.GameView;
+import com.example.wiffleballscorekeeperapp.GameAndroid;
+import com.example.wiffleballscorekeeperapp.R;
+import com.example.wiffleballscorekeeperapp.customviews.GameView;
 
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
-    final private String LOG_TAG = this.getClass().getSimpleName();
-
     final private GameAndroid androidGame = GameAndroid.getInstance();
 
     private GameView gameDisplay;
@@ -24,10 +24,10 @@ public class GameActivity extends AppCompatActivity {
     private View out_menu;
     private View continue_menu;
     private View gameover_menu;
-    private ArrayList<View> menus = new ArrayList<View>();
     private Button undo_button;
     private Button redo_button;
     private Button continue_button;
+    final private ArrayList<View> menus = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         gameDisplay = findViewById(R.id.game_display);
-        gameDisplay.setHeadingText(String.format("%d inning-game", androidGame.getNumInnings()));
+        gameDisplay.setHeadingText(getString(R.string.game_heading_text, androidGame.getNumInnings()));
 
         pitch_menu = findViewById(R.id.pitch_buttons);
         hit_menu = findViewById(R.id.hit_buttons);
@@ -68,12 +68,12 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.double_button).setOnClickListener((View view) -> ballHit(GameAndroid.HIT_TYPES.DOUBLE));
         findViewById(R.id.triple_button).setOnClickListener((View view) -> ballHit(GameAndroid.HIT_TYPES.TRIPLE));
         findViewById(R.id.homerun_button).setOnClickListener((View view) -> ballHit(GameAndroid.HIT_TYPES.HOMERUN));
-        findViewById(R.id.cancel_hit_button).setOnClickListener((View view) -> cancelClicked(view));
+        findViewById(R.id.cancel_hit_button).setOnClickListener(this::cancelClicked);
 
         findViewById(R.id.out_button).setOnClickListener((View view) -> showMenu(out_menu));
         findViewById(R.id.flyout_button).setOnClickListener((View view) -> outMade(GameAndroid.OUT_TYPES.FLYOUT));
         findViewById(R.id.groundout_button).setOnClickListener((View view) -> outMade(GameAndroid.OUT_TYPES.GROUNDOUT));
-        findViewById(R.id.cancel_out_button).setOnClickListener((View view) -> cancelClicked(view));
+        findViewById(R.id.cancel_out_button).setOnClickListener(this::cancelClicked);
 
         findViewById(R.id.undo_button).setOnClickListener((View view) -> undoGameAction());
         findViewById(R.id.redo_button).setOnClickListener((View view) -> redoGameAction());
@@ -99,7 +99,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         for (View menu : menus) {
             if (menu.getVisibility() == View.VISIBLE) {
@@ -113,15 +113,15 @@ public class GameActivity extends AppCompatActivity {
         String toastText = "";
         switch (callType) {
             case BALL:
-                toastText = "Ball";
+                toastText = getString(R.string.ball_text);
                 break;
             case STRIKE:
-                toastText = "Strike";
+                toastText = getString(R.string.strike_text);
                 break;
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        androidGame.makeToast(this, toastText);
+        GameAndroid.makeToast(this, toastText);
     }
 
     private void ballHit(GameAndroid.HIT_TYPES hitType) {
@@ -129,21 +129,21 @@ public class GameActivity extends AppCompatActivity {
         String toast_text = "";
         switch (hitType) {
             case SINGLE:
-                toast_text = "Single!";
+                toast_text = getString(R.string.single_text) + "!";
                 break;
             case DOUBLE:
-                toast_text = "Double!";
+                toast_text = getString(R.string.double_text) + "!";
                 break;
             case TRIPLE:
-                toast_text = "Triple!";
+                toast_text = getString(R.string.triple_text) + "!";
                 break;
             case HOMERUN:
-                toast_text = "Homerun!";
+                toast_text = getString(R.string.homerun_text) + "!";
                 break;
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        androidGame.makeToast(this, toast_text);
+        GameAndroid.makeToast(this, toast_text);
     }
 
     private void outMade(GameAndroid.OUT_TYPES outType) {
@@ -151,35 +151,35 @@ public class GameActivity extends AppCompatActivity {
         String toastText = "";
         switch (outType) {
             case GROUNDOUT:
-                toastText = "Groundout";
+                toastText = getString(R.string.groundout_text);
                 break;
             case FLYOUT:
-                toastText = "Flyout";
+                toastText = getString(R.string.flyout_text);
                 break;
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        androidGame.makeToast(this, toastText);
+        GameAndroid.makeToast(this, toastText);
     }
 
     private void undoGameAction() {
         String action = androidGame.undoGameAction();
         if (action == null) {
-            action = "Cannot undo further...";
+            action = getString(R.string.undo_error_text);
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        androidGame.makeToast(this, "Undo: " + action);
+        GameAndroid.makeToast(this, getString(R.string.undo_text) + ": " + action);
     }
 
     private void redoGameAction() {
         String action = androidGame.redoGameAction();
         if (action == null) {
-            action = "Cannot redo further...";
+            action = getString(R.string.redo_error_text);
         }
         updateMenu();
         gameDisplay.displayGame(androidGame.getCurrentGame());
-        androidGame.makeToast(this, "Redo: " + action);
+        GameAndroid.makeToast(this, getString(R.string.redo_text) +": " + action);
     }
 
     private void updateMenu() {
@@ -218,9 +218,6 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
-
-    @SuppressLint("SetTextI18n")
-
 
     public void done()
     {

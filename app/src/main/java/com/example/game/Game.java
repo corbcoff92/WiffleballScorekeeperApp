@@ -14,9 +14,12 @@ public class Game {
      * Boolean flag indicating whether or not this game has ended.
      */
     public boolean isGameOver = false;
+    /**
+     * Boolean flag indicating whether or not this game is in a waiting state.
+     */
     public boolean isWaiting = false;
 
-    // Package private members
+    // Private members
     private boolean isTopOfInning;
     private String message;
     private int NUM_INNINGS;
@@ -34,8 +37,8 @@ public class Game {
      * Having the number of innings be an input parameter allows the game length to vary as desired.
      *
      * @param numInnings   The desired number of innings for the game to be played.
-     * @param homeTeamName The desired name for the home team. Can only be a maximum of 10 characters.
-     * @param awayTeamName The desired name for the away team. Can only be a maximum of 10 characters.
+     * @param awayTeamName The desired name for the away team.
+     * @param homeTeamName The desired name for the home team.
      */
     public Game(int numInnings, String awayTeamName, String homeTeamName) {
         NUM_INNINGS = numInnings;
@@ -48,7 +51,7 @@ public class Game {
         battingTeam = awayTeam;
         pitchingTeam = homeTeam;
         message = "Play Ball!";
-        runners = new LinkedList<Integer>();
+        runners = new LinkedList<>();
 
         // Call new inning for the away team so that it 
         // can be tracked from the beginning of the game
@@ -73,6 +76,10 @@ public class Game {
         count = new Count(game.count);
         homeTeam = new Team(game.homeTeam);
         awayTeam = new Team(game.awayTeam);
+        // Set batting & pitching teams based on current inning half
+        // Creating copies of batting & pitching teams would result in bugs
+        // because they would point to different placed in memory, rather
+        // than being pointers to the current teams.
         if (game.isTopOfInning) {
             battingTeam = awayTeam;
             pitchingTeam = homeTeam;
@@ -81,7 +88,7 @@ public class Game {
             pitchingTeam = awayTeam;
         }
         outs = game.outs;
-        runners = new LinkedList<Integer>(game.runners);
+        runners = new LinkedList<>(game.runners);
     }
 
     /**
@@ -310,120 +317,149 @@ public class Game {
         }
     }
 
+    /**
+     * Used to determine if it is the top or bottom of the inning.
+     *
+     * @return {@code boolean} indicating whether or not it is not top of the inning.
+     */
     public boolean isTopInning() {
         return isTopOfInning;
     }
 
+    /**
+     * Used to determine the current inning number.
+     *
+     * @return Current inning number.
+     */
     public int getInning() {
         return inning;
     }
 
+    /**
+     * Used to determine the number of balls in the current count.
+     *
+     * @return Number of balls in the current count.
+     */
     public int getBalls() {
         return count.balls;
     }
 
+    /**
+     * Used to determine the number of strikes in the current count.
+     *
+     * @return Number of strikes in the current count.
+     */
     public int getStrikes() {
         return count.strikes;
     }
 
+    /**
+     * Used to determine the number of outs in the current inning.
+     *
+     * @return Number of outs in the current inning.
+     */
     public int getOuts() {
         return outs;
     }
 
+    /**
+     * Used to get the {@code String} name for this game's home team.
+     *
+     * @return String indicating the home team's name.
+     */
+    public String getHomeName() {
+        return homeTeam.name;
+    }
+
+    /**
+     * Used to determine the number of runs that the home team currently has.
+     *
+     * @return Number of runs for the home team.
+     */
     public int getHomeRuns() {
         return homeTeam.getRuns();
     }
 
+    /**
+     * Used to determine the number of hits that the home team currently has.
+     *
+     * @return Number of hits for the home team.
+     */
     public int getHomeHits() {
         return homeTeam.hits;
     }
 
+    /**
+     * Used to determine the number of walks that the home team has currently issued.
+     *
+     * @return Number of walks for the home team.
+     */
     public int getHomeWalks() {
         return homeTeam.walks;
     }
 
+    /**
+     * Used to get the {@code String} name for this game's away team.
+     *
+     * @return String indicating the away team's name.
+     */
+    public String getAwayName() {
+        return awayTeam.name;
+    }
+
+    /**
+     * Used to determine the number of runs that the away team currently has.
+     *
+     * @return Number of runs for the away team.
+     */
     public int getAwayRuns() {
         return awayTeam.getRuns();
     }
 
+    /**
+     * Used to determine the number of hits that the away team currently has.
+     *
+     * @return Number of hits for the away team.
+     */
     public int getAwayHits() {
         return awayTeam.hits;
     }
 
+    /**
+     * Used to determine the number of walks that the away team has currently issued.
+     *
+     * @return Number of walks for the away team.
+     */
     public int getAwayWalks() {
         return awayTeam.walks;
     }
 
+    /**
+     * Used to determine if a runner is currently occupying the base indicated by the given number.
+     *
+     * @param base Number indicating the base number to be checked.
+     * @return {@code true} if there is a runner occupying the given base number, {@code false} otherwise
+     */
     public boolean isRunnerOnBase(int base) {
         return runners.contains(base);
     }
 
+    /**
+     * Used to obtain this game's current message {@code String} to be displayed.
+     *
+     * @return String indicating this game's state and results.
+     */
     public String getMessage() {
         return message;
     }
 
-    public int getNumInnings() { return NUM_INNINGS; }
-
-    public String getAwayName() { return awayTeam.name; }
-
-    public String getHomeName() { return homeTeam.name; }
-
-
-
     /**
-     * Prints the final game state to the screen, formatted to look like a boxscore.
-     * The runs, hits, and walk totals for each team are displayed, along with their
-     * number of runs scored in each inning.
+     * Used to determine the number of innings that this game should last.
+     *
+     * @return Number of innings that the current game should last.
      */
-    public String getFinalDisplayString() {
-        String displayText = "";
-        final int NAME_PADDING = Math.max(6, Math.max(homeTeam.name.length(), awayTeam.name.length()));
-
-        // Produce formatted heading string //
-        // Final state for extra innings if needed
-        String headingText = (inning <= NUM_INNINGS ? "FINAL" : "FIN/" + inning);
-        headingText = String.format("%-" + NAME_PADDING + "s  | ", headingText);
-        // Add inning headings
-        for (int i = 1; i <= awayTeam.getRunserPerInning().size(); i++) {
-            headingText += (String.format("%-2d ", i));
-        }
-        // Add total headings
-        headingText += "|R  H  W";
-
-        // Produce spacing bar //
-        String spacingString = "";
-        for (int i = 0; i < headingText.length(); i++) {
-            spacingString += '-';
-        }
-
-        // Produce boxscore strings for each team //
-        // Add team names
-        String awayString = String.format("%-" + NAME_PADDING + "s  | ", awayTeam.name);
-        String homeString = String.format("%-" + NAME_PADDING + "s  | ", homeTeam.name);
-        // Add runs per inning
-        for (int i = 0; i < awayTeam.getRunserPerInning().size(); i++) {
-            awayString += String.format("%-2d ", awayTeam.getRunserPerInning().get(i));
-            // If bottom of inning was not needed, add "-" for 
-            // last inning of home team indicating as such
-            if (i < homeTeam.getRunserPerInning().size()) {
-                homeString += String.format("%-2d ", homeTeam.getRunserPerInning().get(i));
-            } else {
-                homeString += "-  ";
-            }
-        }
-        // Add team totals
-        awayString += String.format("|%-2d %-2d %-2d", awayTeam.getRuns(), awayTeam.hits, awayTeam.walks);
-        homeString += String.format("|%-2d %-2d %-2d", homeTeam.getRuns(), homeTeam.hits, homeTeam.walks);
-
-        // Print scoreboard
-        displayText += "\n" + headingText + "\n";
-        displayText += spacingString + "\n";
-        displayText += awayString + "\n";
-        displayText += homeString + "\n";
-        displayText += spacingString + "\n";
-        displayText += "\n";
-
-        return displayText;
+    public int getNumInnings() {
+        return NUM_INNINGS;
     }
 
     /**
@@ -439,25 +475,49 @@ public class Game {
         String action = state.keySet().iterator().next();
         Game game = state.get(action);
         message = "Undo: " + action;
-        setState(game);
+        if (game != null)
+            setState(game);
     }
 
+    /**
+     * Implementation of an action being redone, by setting this game's attributes using the given game's attributes contained
+     * in the {@link HashMap}. The provided map contains the name of the action being redone, and a the {@link Game} option
+     * from which the attributes should be set.
+     *
+     * @param state Map containing a String indicating the action that is being redone, and an instance of {@link Game}
+     *              indicating the state of the game after the action occured. The current game's attributes are
+     *              set using the game instance provided in the map.
+     */
     public void redo(final HashMap<String, Game> state) {
         String action = state.keySet().iterator().next();
         Game game = state.get(action);
         message = "Redo: " + action;
-        setState(game);
+        if (game != null)
+            setState(game);
     }
 
+    /**
+     * Sets the attributes of this game based on the given game instance.
+     * This method is used for the implementation of {@see undo} and {@see redo}.
+     *
+     * @param game {@code Game} instance from which this game's state should be set.
+     */
     private void setState(Game game) {
         isGameOver = game.isGameOver;
         isWaiting = game.isWaiting;
         isTopOfInning = game.isTopOfInning;
         NUM_INNINGS = game.NUM_INNINGS;
         inning = game.inning;
+        // Copies of Counts, Teams, and LinkedLists are not needed
+        // because the given state will not be needed unless actions
+        // are undone
         count = game.count;
         homeTeam = game.homeTeam;
         awayTeam = game.awayTeam;
+        // Set batting & pitching teams based on current inning half
+        // Creating copies of batting & pitching teams would result in bugs
+        // because they would point to different placed in memory, rather
+        // than being pointers to the current teams
         if (game.isTopOfInning) {
             battingTeam = awayTeam;
             pitchingTeam = homeTeam;

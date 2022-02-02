@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp">
 
     <TextView
+        android:id="@+id/slot_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Empty Slot"
+        android:text="@string/empty_slot_text"
         android:textSize="50sp"
         android:gravity="center"
         android:textColor="@color/black"
-        android:paddingTop="25sp"
-        android:paddingBottom="25sp"/>
+        android:paddingTop="35dp"
+        android:paddingBottom="35dp"/>
 
 </androidx.cardview.widget.CardView>
