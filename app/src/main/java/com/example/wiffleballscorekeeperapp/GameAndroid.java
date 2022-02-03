@@ -1,7 +1,6 @@
 package com.example.wiffleballscorekeeperapp;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.widget.Toast;
 
 import com.example.game.Game;
@@ -38,11 +37,11 @@ public class GameAndroid {
     public void pitchCalled(PITCH_CALL_TYPES callType) {
         switch (callType) {
             case BALL:
-                gameStack.stackGameState(Resources.getSystem().getString(R.string.ball_text));
+                gameStack.stackGameState("Ball");
                 currentGame.callBall();
                 break;
             case STRIKE:
-                gameStack.stackGameState(Resources.getSystem().getString(R.string.strike_text));
+                gameStack.stackGameState("Strike");
                 currentGame.callStrike();
                 break;
         }
@@ -51,19 +50,19 @@ public class GameAndroid {
     public void ballHit(HIT_TYPES hit_type) {
         switch (hit_type) {
             case SINGLE:
-                gameStack.stackGameState(Resources.getSystem().getString(R.string.single_text));
+                gameStack.stackGameState("Single");
                 currentGame.advanceRunnersHit(1);
                 break;
             case DOUBLE:
-                gameStack.stackGameState(Resources.getSystem().getString(R.string.double_text));
+                gameStack.stackGameState("Double");
                 currentGame.advanceRunnersHit(2);
                 break;
             case TRIPLE:
-                gameStack.stackGameState(Resources.getSystem().getString(R.string.triple_text));
+                gameStack.stackGameState("Triple");
                 currentGame.advanceRunnersHit(3);
                 break;
             case HOMERUN:
-                gameStack.stackGameState(Resources.getSystem().getString(R.string.homerun_text));
+                gameStack.stackGameState("Homerun");
                 currentGame.advanceRunnersHit(4);
                 break;
         }
@@ -72,11 +71,11 @@ public class GameAndroid {
     public void outMade(OUT_TYPES out_type) {
         switch (out_type) {
             case GROUNDOUT:
-                gameStack.stackGameState(Resources.getSystem().getString(R.string.groundout_text));
+                gameStack.stackGameState("Groundout");
                 currentGame.groundOut();
                 break;
             case FLYOUT:
-                gameStack.stackGameState(Resources.getSystem().getString(R.string.flyout_text));
+                gameStack.stackGameState("Flyout");
                 currentGame.flyOut();
                 break;
         }
@@ -91,9 +90,9 @@ public class GameAndroid {
         String waitingState = "";
         if (currentGame.isWaiting) {
             if (currentGame.checkInningOver()) {
-                waitingState = Resources.getSystem().getString(R.string.next_inning_text);
+                waitingState = "Next inning";
             } else {
-                waitingState = Resources.getSystem().getString(R.string.next_batter_text);
+                waitingState = "Next batter";
             }
         }
         return waitingState;

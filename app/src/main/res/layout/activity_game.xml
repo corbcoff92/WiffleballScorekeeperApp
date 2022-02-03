@@ -43,8 +43,7 @@
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
                 android:minHeight="60dp"
-                android:text="@string/ball_text"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/ball_text" />
 
             <Button
                 android:id="@+id/strike_button"
@@ -54,8 +53,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_weight="1"
                 android:minHeight="60dp"
-                android:text="@string/strike_text"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/strike_text" />
 
         </LinearLayout>
 
@@ -85,10 +83,9 @@
                 android:layout_marginEnd="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
-                android:background="@color/disabled_button_color"
+                android:backgroundTint="@color/disabled_button_color"
                 android:minHeight="60dp"
-                android:text="@string/undo_text"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/undo_text" />
 
             <Button
                 android:id="@+id/redo_button"
@@ -97,10 +94,9 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
                 android:layout_weight="1"
-                android:background="@color/disabled_button_color"
+                android:backgroundTint="@color/disabled_button_color"
                 android:minHeight="60dp"
-                android:text="@string/redo_text"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/redo_text" />
 
         </LinearLayout>
 
