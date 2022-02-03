@@ -239,10 +239,20 @@ public class Game {
         checkGameOver();
     }
 
+    /**
+     * Used to determine whether or not the current inning has ended.
+     * This is useful for determining the waiting state of the game.
+     * @return {@code true} if the inning is over, {@code false} otherwise.
+     */
     public boolean checkInningOver() {
         return outs >= 3;
     }
 
+    /**
+     * Moves the game forward if it is in a waiting state. The game pauses during significant
+     * moments (such as the inning ending). This makes the game easier to follow. This method
+     * must be called to continue this game.
+     */
     public void continueGame() {
         if (isWaiting && !isGameOver) {
             // Check if half-inning is over

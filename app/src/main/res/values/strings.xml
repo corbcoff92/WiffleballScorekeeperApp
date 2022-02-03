@@ -49,4 +49,5 @@
     <string name="no_slot_selected">Please first select a game slot…</string>
     <string name="no_saved_games">No saved games to %s…</string>
     <string name="game_saved_text">Game saved…</string>
+    <string name="game_not_saved_text">Game not saved…</string>
 </resources>

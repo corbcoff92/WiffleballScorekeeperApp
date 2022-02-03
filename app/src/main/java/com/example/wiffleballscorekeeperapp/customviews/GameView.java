@@ -12,6 +12,10 @@ import com.example.wiffleballscorekeeperapp.R;
 
 import java.util.Locale;
 
+/**
+ * Custom {@code View} used for displaying a game of wiffleball. It includes drawables that indicate
+ * the number of outs, as well as the bases that are currently occupied.
+ */
 public class GameView extends TableLayout {
     final private TextView inning_display;
     final private TextView home_name_display;
@@ -34,10 +38,13 @@ public class GameView extends TableLayout {
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         inflate(context, R.layout.game_view, this);
+
+        // Set custom attributes declared in the xml file
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.GameView);
         setHeadingText(attributes.getString(R.styleable.GameView_headingText));
         attributes.recycle();
 
+        // Find & cache needed View references
         home_name_display = findViewById(R.id.home_name_display);
         away_name_display = findViewById(R.id.away_name_display);
         inning_display = findViewById(R.id.inning_display);
@@ -57,14 +64,24 @@ public class GameView extends TableLayout {
         out_3_display = findViewById(R.id.out_3_display);
     }
 
+    /**
+     * Used to set the text that will be displayed in this {@code GameView}'s heading.
+     * @param headingText   String that should be displayed in the heading of this {@code GameView}
+     */
     public void setHeadingText(String headingText) {
         TextView heading_display = findViewById(R.id.heading_display);
         heading_display.setText(headingText);
+        // Tell UI to redraw
         invalidate();
         requestLayout();
     }
 
+    /**
+     * Updates the {@code GameView} to the given {@link Game}'s state.
+     * @param game {@link Game} instance to be displayed.
+     */
     public void displayGame(Game game) {
+        // Update scoreboard
         String inning_text = (game.isTopInning() ? "TOP " : "BOT ") + game.getInning();
         inning_display.setText(inning_text);
         home_name_display.setText(game.getHomeName());
@@ -78,6 +95,7 @@ public class GameView extends TableLayout {
         count_display.setText(String.format(Locale.US, "%d - %d", game.getBalls(), game.getStrikes()));
         message_display.setText(game.getMessage());
 
+        // Update base runner & out drawables
         int[] runners = new int[3];
         int[] outs = new int[3];
         int numOuts = game.getOuts();
@@ -98,6 +116,7 @@ public class GameView extends TableLayout {
         out_2_display.setImageResource(outs[1]);
         out_3_display.setImageResource(outs[2]);
 
+        // Tell UI to redraw
         invalidate();
         requestLayout();
     }
